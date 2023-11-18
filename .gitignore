@@ -56,3 +56,6 @@ dkms.conf
 *.nds
 *.arm9
 *.log
+.cproject
+*.xml
+*.prefs
