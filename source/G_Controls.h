@@ -9,5 +9,5 @@
 #include <nds.h>
 #include "P_Util.h"
 
-void initInput();
-void handleInput();
+void Game_InitInput();
+void Game_HandleInput();

@@ -37,6 +37,6 @@ int rng(){
 	return seed < 0 ? -seed : seed;
 }
 
-void set_seed(int new_seed){
+void rng_set_seed(int new_seed){
 	seed = new_seed;
 }
