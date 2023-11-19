@@ -12,6 +12,7 @@ inline float clamp_float(float value, float min, float max);
 inline int clamp(int value, int min, int max);
 
 inline int coords(int x, int y, int w);
+inline int coords_3d(int x, int y, int z, int w, int l);
 
 inline int sign(int x);
 

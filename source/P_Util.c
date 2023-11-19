@@ -16,6 +16,11 @@ inline int coords(int x, int y, int w){
 	return w*y + x;
 }
 
+
+inline int coords_3d(int x, int y, int z, int w, int l){
+	return (w*l)*z + w*y + x;
+}
+
 inline int sign(int x){
 	if(x > 0)
 		return 1;
