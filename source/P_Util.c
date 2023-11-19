@@ -18,7 +18,7 @@ inline int coords(int x, int y, int w){
 
 
 inline int coords_3d(int x, int y, int z, int w, int l){
-	return (w*l)*z + w*y + x;
+	return (w*l)*z + w*x + y;
 }
 
 inline int sign(int x){
