@@ -15,14 +15,14 @@ typedef enum {
 	T_TOP    = 8
 } TileSlices;
 
-void RenderTiles(s8* world);
-void GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z);
-void GenerateTilesInverse(u16* tiles);
+void ISO_RenderTiles(s8* world);
+void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z);
+void ISO_GenerateTilesInverse(u16* tiles);
 /*
  * Return tile number, in 32x32 world.
  *
  */
-s16 convertWorldToTile(u8 px, u8 py, u8 pz);
+s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz);
 
 /*
  * Gives the bottom left solution.
@@ -32,4 +32,6 @@ s16 convertWorldToTile(u8 px, u8 py, u8 pz);
  * returns the lowest tile affecting this one (the bottom triangle)
  *
  */
-u16 convertTileToWorld(u16 tile);
+u16 ISO_convertTileToWorld(u16 tile);
+
+void ISO_InitTiles();

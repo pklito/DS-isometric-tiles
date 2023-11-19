@@ -17,7 +17,7 @@ int main(void)
 	Graphics_SetupMain();
 
 	//printf("%d\n", convertWorldToTile(0,0,0));
-	RenderTiles(WORLD_MAP);
+	ISO_RenderTiles(WORLD_MAP);
 	while(1) {
 		//Graphics_SwapBuffers(MAIN);
 

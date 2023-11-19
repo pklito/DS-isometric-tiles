@@ -10,7 +10,7 @@ inline void _setSlice(u16* tiles, int tile, u8 color, TileSlices slice){
 	tiles[tile] &= !(0x7 << slice);
 	tiles[tile] ^= color << slice;
 }
-void GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
+void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
 	int i,j,k;
 	printf("%p\n",world);
 	for(k = 0; k < world_dim_z; k++){
@@ -24,7 +24,7 @@ void GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 wor
 				u8 floor_color = 1;
 				u8 wall_color = 2;
 				//get topleft tile
-				int tile = convertWorldToTile(i,j,k);
+				int tile = ISO_convertWorldToTile(i,j,k);
 
 				//is this block half shifted down?
 				bool is_full = ((i+j)%2 == 0);
@@ -67,8 +67,8 @@ void GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 wor
 }
 
 u16 tiles[TILES_SHAPE_WIDTH * TILES_SHAPE_HEIGHT];
-void RenderTiles(s8* world){
-	GenerateTiles(tiles, world, WORLD_DIM_X, WORLD_DIM_Y, WORLD_DIM_Z);
+void ISO_RenderTiles(s8* world){
+	ISO_GenerateTiles(tiles, world, WORLD_DIM_X, WORLD_DIM_Y, WORLD_DIM_Z);
 	int i,j;
 	for(j = 0; j < TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT/2; j++){
 			int tile = tiles[j];
@@ -87,7 +87,7 @@ void RenderTiles(s8* world){
 	}
 }
 
-s16 convertWorldToTile(u8 px, u8 py, u8 pz){
+s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz){
 	int tile = TILES_ORIGIN;
 
 	//get the "floor coordinates" equivalent
@@ -109,4 +109,34 @@ s16 convertWorldToTile(u8 px, u8 py, u8 pz){
  * returns the lowest tile affecting this one (the bottom triangle)
  *
  */
-u16 convertTileToWorld(u16 tile);
+u16 ISO_convertTileToWorld(u16 tile);
+
+
+/* TILES */
+
+u8 TILE_FULL[] = {
+		0x00,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00
+};
+
+
+u8 TILE_ABC_F1F2F3[] = {
+		0xaa,0xaa,0xaa,0xbb,
+		0xaa,0xaa,0xbb,0xbb,
+		0xaa,0xbb,0xbb,0xbb,
+		0xbb,0xbb,0xbb,0xbb,
+		0xcc,0xbb,0xbb,0xbb,
+		0xcc,0xcc,0xbb,0xbb,
+		0xcc,0xcc,0xcc,0xbb,
+		0xcc,0xcc,0xcc,0xcc,
+};
+
+void ISO_InitTiles(){
+
+}
