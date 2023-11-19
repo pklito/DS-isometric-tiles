@@ -326,8 +326,28 @@ u8 TILE_ABB_WFF_W1F2F2[] = {
 		0x22,0x22,0x22,0x22,
 		0x22,0x22,0x22,0x22,
 };
+
+u16 COLOR_PALETTE[] = {
+		COLOR_WATER,COLOR_F1, COLOR_F2, COLOR_FS, COLOR_W1A,COLOR_W1B,COLOR_W2A,COLOR_W2B,
+		COLOR_F1,	COLOR_F1, COLOR_F2, COLOR_F2, COLOR_FS, COLOR_FS, COLOR_W1A,COLOR_W2A,
+		COLOR_F2, 	COLOR_FS, COLOR_F1, COLOR_FS, COLOR_F1, COLOR_F2, COLOR_F2, COLOR_FS,
+		COLOR_FS, 	COLOR_F2, COLOR_FS, COLOR_F1, COLOR_F2, COLOR_F1, COLOR_FS, COLOR_F1,
+		COLOR_W1A, 	COLOR_W1A,COLOR_W2A,COLOR_W2A,COLOR_W2B,COLOR_W1B,COLOR_W1B,COLOR_W2B,
+		COLOR_F1,	COLOR_F1, COLOR_F2, COLOR_F2, COLOR_F2, COLOR_F1, COLOR_F1, COLOR_F2,
+		COLOR_WATER,COLOR_WATER,COLOR_WATER,COLOR_WATER,COLOR_WATER,COLOR_WATER,COLOR_WATER,COLOR_WATER,
+		COLOR_W2A,  COLOR_W2B,COLOR_W1A,COLOR_W1B,COLOR_W1A,COLOR_W2B,COLOR_W2A,COLOR_W1B
+};
 void ISO_InitTiles(){
 	/* Palette */
+	u8 color_offset = 0;
+	u8 palette_offset = 0;
+	//create the manual list with loops to not have to change the offsets every time.
+	for(color_offset = 0; color_offset < 8; color_offset ++){
+		for(palette_offset = 0; palette_offset < 8; palette_offset++){
+			BG_PALETTE[coords(color_offset,palette_offset,16)] = COLOR_PALETTE[coords(palette_offset,color_offset,8)];
+		}
+	}
+	//offset 1
 
 	/* Tiles */
 	dmaCopy(TILE_FULL, &BG_TILE_RAM(0)[T_FULL<<4], 32);
