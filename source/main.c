@@ -15,8 +15,9 @@ int main(void)
 	consoleDemoInit();
 
 	Graphics_SetupMain();
+
 	//printf("%d\n", convertWorldToTile(0,0,0));
-	//RenderTiles();
+	RenderTiles(WORLD_MAP);
 	while(1) {
 		//Graphics_SwapBuffers(MAIN);
 

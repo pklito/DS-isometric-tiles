@@ -14,10 +14,9 @@ typedef enum {
 	T_MIDDLE = 4,
 	T_TOP    = 8
 } TileSlices;
-/*
- *
- */
-void GenerateTiles(u16* tiles);
+
+void RenderTiles(s8* world);
+void GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z);
 void GenerateTilesInverse(u16* tiles);
 /*
  * Return tile number, in 32x32 world.

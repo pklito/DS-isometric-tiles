@@ -4,28 +4,30 @@
  *  In charge of tile graphics
  */
 #include "G_Isometric.h"
-extern s8* WORLD_MAP;
 
 inline void _setSlice(u16* tiles, int tile, u8 color, TileSlices slice){
+	printf("set %d,%d,%d\n",tile,color,slice);
 	tiles[tile] &= !(0x7 << slice);
 	tiles[tile] ^= color << slice;
 }
-
-void _GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
+void GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
 	int i,j,k;
+	printf("%p\n",world);
 	for(k = 0; k < world_dim_z; k++){
 		for(j = 0; j < world_dim_y; j++){
 			for(i = 0; i < world_dim_x; i++){
 
 				//if air, skip
+
 				if(! world[coords_3d(i,j,k,world_dim_x,world_dim_y)]) continue;
+				printf("%d,%d,%d, %d:%d\n",i,j,k, coords_3d(i,j,k,world_dim_x,world_dim_y),world[coords_3d(i,j,k,world_dim_x,world_dim_y)]);
 				u8 floor_color = 1;
 				u8 wall_color = 2;
 				//get topleft tile
 				int tile = convertWorldToTile(i,j,k);
 
 				//is this block half shifted down?
-				bool is_full = (i+j)%2;
+				bool is_full = ((i+j)%2 == 0);
 				if(is_full){
 					//TODO edge case of wrapping, edge case of original tile wrapping
 					_setSlice(tiles, tile, floor_color, T_MIDDLE);
@@ -34,42 +36,49 @@ void _GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 wo
 					_setSlice(tiles, tile, wall_color,T_BOTTOM);
 
 					tile += TILES_SHAPE_WIDTH - 1;
+
 					_setSlice(tiles, tile, wall_color, T_TOP);
+					_setSlice(tiles, tile, wall_color, T_MIDDLE);
 					tile += 1;
 					_setSlice(tiles, tile, wall_color, T_TOP);
+					_setSlice(tiles, tile, wall_color, T_MIDDLE);
 				}
 				else{
 					//TODO edge case of wrapping, edge case of original tile wrapping
-					_setSlice(tiles, tile, floor_color, T_BOTTOM);
+					_setSlice(tiles, tile++, floor_color, T_BOTTOM);
 					_setSlice(tiles, tile, floor_color,T_BOTTOM);
 
 					tile += TILES_SHAPE_WIDTH - 1;
-					_setSlice(tiles, tile, wall_color, T_TOP);
+					_setSlice(tiles, tile, floor_color, T_TOP);
 					_setSlice(tiles, tile, wall_color, T_MIDDLE);
+					_setSlice(tiles, tile, wall_color, T_BOTTOM);
+					tile += 1;
+					_setSlice(tiles, tile, floor_color, T_TOP);
+					_setSlice(tiles, tile, wall_color, T_MIDDLE);
+					_setSlice(tiles, tile, wall_color, T_BOTTOM);
+					tile += TILES_SHAPE_WIDTH - 1;
+					_setSlice(tiles, tile, wall_color, T_TOP);
 					tile += 1;
 					_setSlice(tiles, tile, wall_color, T_TOP);
-					_setSlice(tiles, tile, wall_color, T_MIDDLE);
 				}
 			}
 		}
 	}
 }
 
-void GenerateTiles(u16* tiles){
-	_GenerateTiles(tiles, WORLD_MAP, WORLD_DIM_X, WORLD_DIM_Y, WORLD_DIM_Z);
-}
-
-void RenderTiles(){
-	u16 tiles[TILES_SHAPE_WIDTH * TILES_SHAPE_HEIGHT];
-	GenerateTiles(tiles);
+u16 tiles[TILES_SHAPE_WIDTH * TILES_SHAPE_HEIGHT];
+void RenderTiles(s8* world){
+	GenerateTiles(tiles, world, WORLD_DIM_X, WORLD_DIM_Y, WORLD_DIM_Z);
 	int i,j;
-	for(j = 0; j < TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT; j++){
-			int tile = tiles[coords(i,j,TILES_SHAPE_WIDTH)];
+	for(j = 0; j < TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT/2; j++){
+			int tile = tiles[j];
 			u8 bottom = tile & 0xf;
 			u8 middle = (tile & 0xf0) >> 4;
 			u8 top = (tile & 0xf00) >> 8;
-			if(tile)
-				BG_TILE_RAM(0)[j] = 1;
+			if(tile){
+				BG_MAP_RAM(1)[j] = 0;
+				printf("(%d,%d): %d,%d,%d\n",j%32,j>>5,bottom,middle,top);
+			}
 	}
 }
 
