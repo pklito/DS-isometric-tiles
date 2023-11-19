@@ -11,9 +11,43 @@
 
 typedef enum {
 	T_BOTTOM = 0,
-	T_MIDDLE = 4,
-	T_TOP    = 8
+	T_MIDDLE = 5,
+	T_TOP    = 10
 } TileSlices;
+
+typedef enum {
+	/*SAME COLOR*/
+	T_FULL,
+	/*2 COLORS*/
+	T_ABA_F1F2F1,
+	T_ABA_F1W1F1,
+	T_ABA_W1F1W1,
+
+	T_AAB_F1F1F2,
+	T_AAB_DDF2,	//water
+	T_AAB_F1F1W1,
+	T_AAB_W1W1X,
+
+	T_ABB_F1W1W1,
+	T_ABB_F1F2F2,
+	T_ABB_WFF_W2F2F2,
+	T_ABB_WFF_W1F2F2,
+	T_ABB_DF2F2,	//water
+
+	/* THREE COLORS*/
+	T_ABC_F1F2F3,
+	T_ABC_DF2F3,	//water
+	T_ABC_F1F2W2,
+	T_ABC_DF2W2,	//water
+	T_ABC_F1W1F2,
+	T_ABC_W1F2W2,
+	T_ABC_WFF_W2F2F3,
+	T_ABC_WFF_W3F2F3,
+	T_ABC_WFF_W1F2F3,
+	T_ABC_WFF_W1DF3
+
+
+} TileTypes;
 
 void ISO_RenderTiles(s8* world);
 void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z);
