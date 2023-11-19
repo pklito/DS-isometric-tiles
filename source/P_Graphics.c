@@ -7,6 +7,29 @@ int P_Graphics_mainH;
 int P_Graphics_subW;
 int P_Graphics_subH;
 
+u8 FULL_TILE[] = {
+		0x11,0x11,0x11,0x11,
+		0x11,0x11,0x11,0x11,
+		0x11,0x11,0x11,0x11,
+		0x11,0x11,0x11,0x11,
+		0x11,0x11,0x11,0x11,
+		0x11,0x11,0x11,0x11,
+		0x11,0x11,0x11,0x11,
+		0x11,0x11,0x11,0x11
+};
+
+u8 TRIANGLE_TILE[] = {
+		0x22,0x22,0x22,0x11,
+		0x22,0x22,0x11,0x11,
+		0x22,0x11,0x11,0x11,
+		0x11,0x11,0x11,0x11,
+		0x33,0x11,0x11,0x11,
+		0x33,0x33,0x11,0x11,
+		0x33,0x33,0x33,0x11,
+		0x33,0x33,0x33,0x33,
+
+};
+
 bool main_graphics_frame = true;
 bool sub_graphics_frame = true;
 void Graphics_SetupMain()
@@ -24,11 +47,12 @@ void Graphics_SetupMain()
 	Graphics_AssignBuffer(MAIN, (u16*)VRAM_A,256,192);
 
 #endif
+	REG_DISPCNT = MODE_5_2D;
 
 #ifdef ROTOSCALE
 	//BG0 will be a tilemap for the sky and floor, using VRAM B
 	//BG2 will be a a rotoscale for the walls, using VRAM A
-	REG_DISPCNT = MODE_5_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG2_ACTIVE;
+	REG_DISPCNT |= DISPLAY_BG2_ACTIVE;
 
 	//Set the coresponding VRAM bank
 	VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG;
@@ -44,14 +68,24 @@ void Graphics_SetupMain()
 	Graphics_AssignBuffer(MAIN,BG_BMP_RAM(1),256,192);
 #endif
 #ifdef TILES
+
+	REG_DISPCNT |= DISPLAY_BG0_ACTIVE;
 	/* Tilemap */
 	BGCTRL[0] = BG_MAP_BASE(1) | BG_32x32 | BG_COLOR_16 | BG_TILE_BASE(0) | BG_PRIORITY_1;//Set the coresponding VRAM bank
 	VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG;
 
 	int i;
 	for(i=0;i<32*32;i++){
-		BG_MAP_RAM(1)[i] = 0 | (i>=32*12 ? BIT(12) : 0);
+		BG_MAP_RAM(1)[i] = 1 | (i%2 == 0 ? BIT(10) : 0);
 	}
+
+
+	BG_PALETTE[1] = RGB15(15,15,0);
+	BG_PALETTE[2] = RGB15(8,8,21);
+	BG_PALETTE[3] = RGB15(15,31,2);
+
+	dmaCopy(FULL_TILE, &BG_TILE_RAM(0)[0], 32);
+	dmaCopy(TRIANGLE_TILE, &BG_TILE_RAM(0)[16], 32);
 #endif
 }
 

@@ -62,7 +62,15 @@ void GenerateTiles(u16* tiles){
 void RenderTiles(){
 	u16 tiles[TILES_SHAPE_WIDTH * TILES_SHAPE_HEIGHT];
 	GenerateTiles(tiles);
-
+	int i,j;
+	for(j = 0; j < TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT; j++){
+			int tile = tiles[coords(i,j,TILES_SHAPE_WIDTH)];
+			u8 bottom = tile & 0xf;
+			u8 middle = (tile & 0xf0) >> 4;
+			u8 top = (tile & 0xf00) >> 8;
+			if(tile)
+				BG_TILE_RAM(0)[j] = 1;
+	}
 }
 
 s16 convertWorldToTile(u8 px, u8 py, u8 pz){

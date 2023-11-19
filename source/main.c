@@ -1,6 +1,7 @@
 #include <math.h>
 #include <nds.h>
 #include "G_Isometric.h"
+#include "P_Graphics.h"
 
 s8 WORLD_MAP[] = {
 		1,1,1,1,
@@ -12,10 +13,12 @@ s8 WORLD_MAP[] = {
 int main(void)
 {
 	consoleDemoInit();
+
+	Graphics_SetupMain();
 	//printf("%d\n", convertWorldToTile(0,0,0));
-	printf("%d\n", convertWorldToTile(3,0,1));
+	//RenderTiles();
 	while(1) {
-		//swap_buffers(MAIN);
+		//Graphics_SwapBuffers(MAIN);
 
 		swiWaitForVBlank();
 	}
