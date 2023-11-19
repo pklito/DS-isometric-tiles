@@ -76,8 +76,13 @@ void RenderTiles(s8* world){
 			u8 middle = (tile & 0xf0) >> 4;
 			u8 top = (tile & 0xf00) >> 8;
 			if(tile){
-				BG_MAP_RAM(1)[j] = 0;
-				printf("(%d,%d): %d,%d,%d\n",j%32,j>>5,bottom,middle,top);
+				if(bottom == middle && middle == top){
+					//solid color
+					BG_MAP_RAM(1)[j] &= 0 | (middle << 12) | (j%2 == 0 ? BIT(10) : 0);
+				}
+				else{
+					BG_MAP_RAM(1)[j] = 0 | (middle << 12) | ((bottom) << 14) | (j%2 == 0 ? BIT(10) : 0);
+				}
 			}
 	}
 }
