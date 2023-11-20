@@ -124,7 +124,7 @@ void ISO_RenderTiles(s8* world){
 			break;
 		case 2:
 			/* ABA */
-			if(_isSameBlock(top,bottom)){
+			if(top == bottom){
 				if(_isFloor(top) && _isFloor(middle) && _isFloor(bottom)){	//F1F2F1
 					tile_index = T_ABA_F1F2F1;
 					palette = _paletteFinder(T_ABA_F1F2F1, bottom,middle,top);
@@ -137,9 +137,12 @@ void ISO_RenderTiles(s8* world){
 					tile_index = T_ABA_W1F1W1;
 					palette = _paletteFinder(T_ABA_W1F1W1, bottom,middle,top);
 				}
+				else{
+					printf("ERROR - pattern: ABA\n %d, %x,%x,%x\n",j, bottom, middle, top);
+				}
 			}
 			/* AAB */
-			else if(_isSameBlock(top,middle)){
+			else if(top == middle){
 				if(_isFloor(top) && _isFloor(middle) && _isFloor(bottom)){	//FF_F2
 					if(_isWater(top)){	//DDf2
 						tile_index = T_AAB_DDF2;
@@ -155,27 +158,68 @@ void ISO_RenderTiles(s8* world){
 					palette = _paletteFinder(T_AAB_F1F1W1, bottom,middle,top);
 
 				}
-				else if(!_isFloor(top) && !_isFloor(middle)){//WWX
-					//TODO WWX
+				else if(!_isFloor(top) && !_isFloor(middle)){
+
+					if(_isWater(bottom)){
+						tile_index = T_AAB_WWX_W1W1D;
+						palette = _paletteFinder(T_AAB_WWX_W1W1D, bottom,middle,top);
+					}
+					else if(_isFloor(bottom) && _isSameBlock(middle,bottom)){
+						tile_index = T_AAB_WWX_W1W1F1;
+						palette = _paletteFinder(T_AAB_WWX_W1W1F1, bottom,middle,top);
+					}
+					else if(_isFloor(bottom) && !_isSameBlock(middle,bottom)){
+						tile_index = T_AAB_WWX_W1W1F2;
+						palette = _paletteFinder(T_AAB_WWX_W1W1F2, bottom,middle,top);
+					}
+					else if(!_isFloor(bottom) && !_isSameBlock(middle,bottom)){
+						tile_index = T_AAB_WWX_W1W1W2;
+						palette = _paletteFinder(T_AAB_WWX_W1W1W2, bottom,middle,top);
+					}
+
+					else if(_isLeftWall(middle) && _isSameBlock(middle,bottom) && _isRightWall(bottom)){
+						tile_index = T_AAB_WWX_W1W1W1B;
+						palette = _paletteFinder(T_AAB_WWX_W1W1W1B, bottom,middle,top);
+					}
+					else if(_isRightWall(middle) && _isSameBlock(middle,bottom) && _isLeftWall(bottom)){
+						tile_index = T_AAB_WWX_W1BW1BW1;
+						palette = _paletteFinder(T_AAB_WWX_W1BW1BW1, bottom,middle,top);
+					}
+
+					else{
+						printf("ERROR - pattern: AAB_WWX\n %d, %x,%x,%x\n",j, bottom, middle, top);
+					}
+				}
+
+				else{
+					printf("ERROR - pattern: AAB\n %d, %x,%x,%x\n",j, bottom, middle, top);
 				}
 			}
 			/* ABB */
-			else{
+			else if(middle == bottom){
 				if(_isFloor(top) && !_isFloor(middle) && !_isFloor(bottom)){	//F1W1W1
 					tile_index = T_ABB_F1W1W1;
 					palette = _paletteFinder(T_ABB_F1W1W1, bottom,middle,top);
 				}
-				if(!_isFloor(top) && _isWater(middle) && _isWater(bottom)){
+				else if(!_isFloor(top) && _isWater(middle) && _isWater(bottom)){
 					tile_index = T_ABB_WFF_W1DD;
 					palette = _paletteFinder(T_ABB_WFF_W1DD, bottom,middle,top);
 				}
 				else if( _isFloor(middle) && _isFloor(bottom)){	//XFF
 					if(true){
 						tile_index = T_ABB_F1F2F2;
-						palette = _paletteFinder(T_ABB_F1F2F2, bottom,middle,top);
+						palette = 1;
 					}
 				}
+				else{
+					printf("ERROR - pattern: ABB\n %d, %x,%x,%x\n",j, bottom, middle, top);
+				}
 			}
+			else{
+				printf("???: %d %d %d %d\n",j,bottom,middle,top);
+			}
+
+			if(palette > 10) printf("2: %d\n",j);
 			BG_MAP_RAM(3)[j] = isFlipped | tile_index | palette<<12;
 			break;
 
@@ -213,6 +257,10 @@ void ISO_RenderTiles(s8* world){
 					palette = _paletteFinder(T_ABC_WFF_W1F2F3, bottom,middle,top);
 				}
 			}
+			else{
+				printf("ERROR - pattern: ABC\n %d, %x,%x,%x\n",j, bottom, middle, top);
+			}
+			if(palette > 10) printf("%d\n",j);
 			BG_MAP_RAM(3)[j] = isFlipped | tile_index | palette<<12;
 			break;
 
