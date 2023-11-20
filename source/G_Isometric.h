@@ -15,6 +15,8 @@ typedef enum {
 	T_TOP    = 10
 } TileSlices;
 
+#define SLICE_MASK 0b11111
+
 typedef enum {
 	/*SAME COLOR*/
 	T_FULL,

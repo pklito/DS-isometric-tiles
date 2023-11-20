@@ -71,19 +71,30 @@ void ISO_RenderTiles(s8* world){
 	ISO_GenerateTiles(tiles, world, WORLD_DIM_X, WORLD_DIM_Y, WORLD_DIM_Z);
 	int i,j;
 	for(j = 0; j < TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT/2; j++){
-			int tile = tiles[j];
-			u8 bottom = tile & 0xf;
-			u8 middle = (tile & 0xf0) >> T_MIDDLE;
-			u8 top = (tile & 0xf00) >> T_TOP;
-			if(tile){
-				if(bottom == middle && middle == top){
-					//solid color
-					BG_MAP_RAM(1)[j] &= 0 | (middle << 12) | (j%2 == 0 ? BIT(10) : 0);
-				}
-				else{
-					BG_MAP_RAM(1)[j] = 0 | (middle << 12) | ((bottom) << 14) | (j%2 == 0 ? BIT(10) : 0);
-				}
-			}
+		int tile = tiles[j];
+		u8 bottom = (tile & (SLICE_MASK<<T_BOTTOM))>> T_BOTTOM;
+		u8 middle = (tile & (SLICE_MASK<<T_MIDDLE)) >> T_MIDDLE;
+		u8 top = (tile & (SLICE_MASK<<T_TOP)) >> T_TOP;
+		if(!tile){
+			BG_MAP_RAM(3)[j] = T_FULL;
+			continue;
+		}
+
+		//How many triangles are the same? (This is how i split the tiles)
+		int unique_colors = 3 - ((bottom==middle) + (middle==top||top==bottom));
+		printf("(%d,%d) %d %d %d\n",j%32,j/32,bottom, middle, top);
+		//I flip every other tile to create the diamond shapes.
+		byte isFlipped = (j%2 == 0 ? BIT(10) : 0);
+		byte palette = 0;
+		switch(unique_colors){
+		case 1:
+			//Check if the solid color is a wall or not. see COLOR_PALETTE first row
+			palette = ((bottom & 0b11000) == 0 ? bottom : ((bottom & 0b11000)>>3) + (bottom<<1));
+			BG_MAP_RAM(3)[j] = isFlipped | T_FULL | palette<<12;
+			break;
+		case 2:
+			break;
+		}
 	}
 }
 
