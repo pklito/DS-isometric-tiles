@@ -67,8 +67,9 @@ _note:_ where i wrote xyz{_1, _2, _3,...} this is one type of combination that h
 
 ### technical limitations
 Since every combination has to be accounted for with the addition of more palettes or more tiles, the amount of different blocks you can implement is very limited.  
-Additionally, Mapping the right palette for the combination of the tiles is a very arduous process, in some cases, requiring 8 if statements, for every palette outcome
+Additionally, Mapping the right palette for the combination of the tiles is a very arduous process, in some cases, requiring 8 if statements, for every palette outcome.  
+Lastly, tile mode on the DS does not allow affine matrix transformations, so the only method to zoom is by doubling the size of each block.
 ### conclusion
 For the above reasons, I would suggest **not** to implement isometric or complex views in Tile mode, but rather use **Rotoscope** after the Triangle Generation step.  
-It is worth noting however, that this implementation takes up a mere _794B_ for the tiles and _64B_ for the palette, as opposed to the _24KB_ of a rotoscope background.  also, consider that you may need to use two backgrounds in order to hide sprites behind some, effectively doubling the amount of memory*  
+It is worth noting however, that this implementation takes up a mere _800B_ for the tiles and _128B_ for the palette, as opposed to the _24KB_ of a rotoscope background.  also, consider that you may need to use two backgrounds in order to hide sprites behind some, effectively doubling the amount of memory*  
 *- in rotoscope, it is possible to "mask" a second layer only around sprites, however if there is more than one on screen, there is no choice but to use the whole 24KB
