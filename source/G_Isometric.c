@@ -81,21 +81,22 @@ inline bool _isRightWall(u8 color){
 	return (color&0b11000) == 2;
 }
 int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
-	u8 bot_c = bottom & 0b00111;
-	u8 bot_f = (bottom & 0b11000) >> 3;
-	u8 mid_c = middle & 0b00111;
-	u8 mid_f = (middle & 0b11000) >> 3;
-	u8 top_c = top & 0b00111;
-	u8 top_f = (top & 0b11000) >> 3;
+	u8 bot_color = bottom & 0b00111;
+	u8 bot_face = (bottom & 0b11000) >> 3;
+	u8 mid_color = middle & 0b00111;
+	u8 mid_face = (middle & 0b11000) >> 3;	//thats you, reading this
+	u8 top_color = top & 0b00111;
+	u8 top_face = (top & 0b11000) >> 3;
 	switch(tile_type){
 	case T_AAB_DDF2:
-		return 2 * bot_c;
+		return 2 * bot_color;
 	case T_AAB_F1F1F2:
-		return 2 * mid_c + (bot_c > mid_c);	//1 1 2
+		return 2 * mid_color + (bot_color > mid_color);	//1 1 2
 	case T_AAB_F1F1W1:
-		return 4 * (bot_f-1) + ((2 * mid_c)+!(bot_f==1))%4;			//4 4 5	 if left wall, F1 F1 F2 F2, (4 + F2 F1 F1 F2)
+		//printf("%d - %d %d %d %d %d %d\n",4 * (bot_face-1) + ((2 * mid_color)+!(bot_face==1))%4, bot_color,bot_face,mid_color,mid_face,top_color,top_face);
+		return 4 * (bot_face-1) + ((2 * (mid_color-1))+!(bot_face==1))%4;			//4 4 5	 if left wall, F1 F1 F2 F2, (4 + F2 F1 F1 F2)
 	default:
-		return mid_f+top_c+top_f;
+		return 1;
 	}
 
 	return 0;
