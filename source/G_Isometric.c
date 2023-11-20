@@ -74,6 +74,12 @@ inline bool _isSameBlock(u8 color1, u8 color2){
 inline bool _isWater(u8 color){
 	return color == 0;
 }
+inline bool _isLeftWall(u8 color){
+	return (color&0b11000) == 1;
+}
+inline bool _isRightWall(u8 color){
+	return (color&0b11000) == 2;
+}
 int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	u8 bot_c = bottom & 0b00111;
 	u8 bot_f = bottom & 0b11000;
