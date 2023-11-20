@@ -12,7 +12,7 @@ If we could paint each individual triangle, we can create the isometric look fai
 
 ## How the code works
 ### Turning the world into triangles
-We start with a 3 dimentional cube world, in the code, it is called `WORLD_MAP`. a 0 in this array means air, a 1 means block 1, a 2, block 2.
+We start with a 3 dimentional cube world; in the code, it is called `WORLD_MAP`. a 0 in this array means air, a 1 means block 1, a 2, block 2.
 We call the function `ISO_GenerateTiles` this function takes this 3D world and converts it into an array of 32x32 squares, from the screens perspective.
 These aren't graphical tiles, they store the 3 colors of the triangles that will be in the tile in that location. represented as such:  
 |15|14-10|98765|43210|
