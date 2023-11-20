@@ -41,8 +41,8 @@ Tiles are split into **which colors repeat themselves on the tile**: AAA, AAB, A
 |colors\\Palettes| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
 |---|---|---|---|---|---|---|---|---|
 | 0 |Water|Water|Water|Water|Water|Water|Water|Water|
-| 1 | F1 | F1 | F2 | F2 | Sand | |Sand |_W1r_|_W2r_|
-| 2 | F2 | Sand | F1 | Sand | | F1 | F2 |_F1_|_Sand_|
+| 1 | F1 | F1 | F2 | F2 | Sand | Sand |_W1r_|_W2r_|
+| 2 | F2 | Sand | F1 | Sand |  F1 | F2 |_F1_|_Sand_|
 ...
 
 ### technical limitations
@@ -50,5 +50,5 @@ Since every combination has to be accounted for with the addition of more palett
 Also, Mapping the right palette for the combination of the tiles is a very arduous process. 
 ### conclusion
 For the above reasons, I would suggest **not** to implement isometric or complex views in Tile mode, but rather use **Rotoscope** after the Triangle Generation step.  
-It is worth noting however, that this implementation takes up a mere **794B** for the tiles and **64B** for the palette, as opposed to the **24KB** of a rotoscope background.  also, consider that you may need to use two backgrounds in order to hide sprites behind some, effectively doubling the amount of memory*
+It is worth noting however, that this implementation takes up a mere _794B_ for the tiles and _64B_ for the palette, as opposed to the _24KB_ of a rotoscope background.  also, consider that you may need to use two backgrounds in order to hide sprites behind some, effectively doubling the amount of memory*
 *- in rotoscope, it is possible to "mask" a second layer only around sprites, however if there is more than one on screen, there is no choice but to use the whole 24KB
