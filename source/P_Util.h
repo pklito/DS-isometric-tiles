@@ -21,3 +21,4 @@ inline int round_float(float b);
 int rng();
 
 void rng_set_seed(int new_seed);
+

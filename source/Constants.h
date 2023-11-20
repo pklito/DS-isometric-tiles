@@ -10,9 +10,9 @@
 #define U8_MAX 255
 
 /* WORLD */
-#define WORLD_DIM_X 4
-#define WORLD_DIM_Y 4
-#define WORLD_DIM_Z 1
+#define WORLD_DIM_X 8
+#define WORLD_DIM_Y 8
+#define WORLD_DIM_Z 3
 
 /* VISUALS */
 //where zero zero starts on screen
