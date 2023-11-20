@@ -42,7 +42,7 @@ In total, I have configured 25 different tiles:
  - ABA: F1F2F1, F1W1F1, W1F1W1
  - AAB: F1F1F2, F1F1W1, W1W1X {W1W1F2, W1W1(W1b), W1W1W2, W1W1D, (W1b)(W1b)W1}
  - ABB: F1W1W1, XF2F2 {F1F2F2, DF2F2, WFF{_W1DD, _W2F2F2, _W1F2F2}
- - ABC: F1F2F3, F1F2W2, W1F2F3{_W2F2F3, _W3F2F3, _W1F2F3} ,DF2F3, DF2W2, W1DF3
+ - ABC: F1F2F3, F1F2W2, W1F2F3{_W2F2F3, _W3F2F3, _W1F2F3} ,DF2F3, DF2W2, W1DF3  
 _note:_ where i wrote xyz{_1, _2, _3,...} this is one type of combination that had too many permutations to fit under one tile, so i split it into several sub cases.
 
 
