@@ -82,11 +82,11 @@ inline bool _isRightWall(u8 color){
 }
 int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	u8 bot_c = bottom & 0b00111;
-	u8 bot_f = bottom & 0b11000;
+	u8 bot_f = (bottom & 0b11000) >> 3;
 	u8 mid_c = middle & 0b00111;
-	u8 mid_f = middle & 0b11000;
+	u8 mid_f = (middle & 0b11000) >> 3;
 	u8 top_c = top & 0b00111;
-	u8 top_f = top & 0b11000;
+	u8 top_f = (top & 0b11000) >> 3;
 	switch(tile_type){
 	case T_AAB_DDF2:
 		return 2 * bot_c;
