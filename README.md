@@ -17,7 +17,8 @@ We call the function `ISO_GenerateTiles` this function takes this 3D world and c
 These aren't graphical tiles, they store the 3 colors of the triangles that will be in the tile in that location. represented as such:  
 |15|14-10|98765|43210|
 |---|---|---|---|
-|on bit|data top|data middle| data bottom|  
+|on bit|data top|data middle| data bottom|
+
 where data would look like this: `(01)(001)`  
 the bottom 3 bits store the type of the block which had that face, and the top 2 bits store if it was the Top face of a block (FLOOR), the left wall (WALL_LEFT) or the right wall (WALL_RIGHT). (11) is undefined.  
 
