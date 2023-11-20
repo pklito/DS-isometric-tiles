@@ -55,7 +55,7 @@ void Graphics_SetupMain()
 	ISO_InitTiles();
 	int i;
 	for(i=0;i<32*32;i++){
-		BG_MAP_RAM(3)[i] = 1 | (i%2 == 1 ? BIT(10): 0);
+		BG_MAP_RAM(3)[i] = 1 | (i%2 == 0 ? BIT(10): 0) | (i%8)<<12;
 	}
 
 	//copies over the tiles and sets palettes 0-7

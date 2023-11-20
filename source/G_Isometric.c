@@ -10,7 +10,7 @@ typedef enum {
 	FACE_WALL_RIGHT = 0b10
 } BlockFaces;
 inline void _setSlice(u16* tiles, int tile, TileSlices slice, u8 color,BlockFaces face){
-	tiles[tile] &= !((0b11111 << slice) | BIT(15));
+	tiles[tile] &= ~((SLICE_MASK << slice) | BIT(15));
 	tiles[tile] ^= ((face<<3) | color) << slice | BIT(15);
 }
 inline void _setWhole(u16* tiles, int tile, u8 color_top, BlockFaces face_top, u8 color_middle, BlockFaces face_middle, u8 color_bottom, BlockFaces face_bottom){
@@ -70,7 +70,7 @@ u16 tiles[TILES_SHAPE_WIDTH * TILES_SHAPE_HEIGHT];
 void ISO_RenderTiles(s8* world){
 	ISO_GenerateTiles(tiles, world, WORLD_DIM_X, WORLD_DIM_Y, WORLD_DIM_Z);
 	int i,j;
-	for(j = 0; j < TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT/2; j++){
+	for(j = 0; j < TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT/1; j++){
 		int tile = tiles[j];
 		u8 bottom = (tile & (SLICE_MASK<<T_BOTTOM))>> T_BOTTOM;
 		u8 middle = (tile & (SLICE_MASK<<T_MIDDLE)) >> T_MIDDLE;
@@ -82,7 +82,7 @@ void ISO_RenderTiles(s8* world){
 
 		//How many triangles are the same? (This is how i split the tiles)
 		int unique_colors = 3 - ((bottom==middle) + (middle==top||top==bottom));
-		printf("(%d,%d) %d %d %d\n",j%32,j/32,bottom, middle, top);
+			//printf("(%d,%d) %d %d %d, %d\n",j%32,j/32,bottom, middle, top,tile);
 		//I flip every other tile to create the diamond shapes.
 		byte isFlipped = (j%2 == 0 ? BIT(10) : 0);
 		byte palette = 0;
@@ -107,8 +107,9 @@ s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz){
 
 	//calculate the tile offset from the origin
 	int offset_x = (y - x);
-	int offset_y = (x+y);
+	int offset_y = (x+y)/2;
 	tile += (offset_x + TILES_SHAPE_WIDTH * offset_y);
+
 	return tile;
 }
 
@@ -404,6 +405,7 @@ void ISO_InitTiles(){
 			BG_PALETTE[coords(color_offset,palette_offset,16)] = COLOR_PALETTE[coords(palette_offset,color_offset,8)];
 		}
 	}
+
 	/* Tiles */
 	dmaCopy(TILE_FULL, &BG_TILE_RAM(0)[T_FULL<<4], 32);
 
