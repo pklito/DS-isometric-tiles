@@ -4,6 +4,7 @@
 #include <nds.h>
 #include "P_Util.h"
 #include "Constants.h"
+#include "G_Isometric.h"
 
 #define ROTOSCALE
 #define TILES

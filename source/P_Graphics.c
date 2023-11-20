@@ -48,16 +48,17 @@ void Graphics_SetupMain()
 
 	REG_DISPCNT |= DISPLAY_BG0_ACTIVE;
 	/* Tilemap */
-	BGCTRL[0] = BG_MAP_BASE(1) | BG_32x32 | BG_COLOR_16 | BG_TILE_BASE(0) | BG_PRIORITY_1;//Set the coresponding VRAM bank
+	BGCTRL[0] = BG_MAP_BASE(3) | BG_32x32 | BG_COLOR_16 | BG_TILE_BASE(0) | BG_PRIORITY_1;//Set the coresponding VRAM bank
 	VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG;
 
+
+	ISO_InitTiles();
 	int i;
 	for(i=0;i<32*32;i++){
-		BG_MAP_RAM(1)[i] = 1 | (i%2 == 0 ? BIT(10) : 0);
+		BG_MAP_RAM(3)[i] = i%24;
 	}
 
 	//copies over the tiles and sets palettes 0-7
-	ISO_InitTiles();
 #endif
 }
 
