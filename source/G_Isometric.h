@@ -29,6 +29,7 @@ typedef enum {
 	T_AAB_DDF2,	//water
 	T_AAB_F1F1W1,
 	T_AAB_WWX_W1W1F2,
+	T_AAB_WWX_W1W1D,	//water
 	T_AAB_WWX_W1W1F1,
 	T_AAB_WWX_W1W1W2,
 	T_AAB_WWX_W1W1W1B,
@@ -36,6 +37,7 @@ typedef enum {
 
 	T_ABB_F1W1W1,
 	T_ABB_F1F2F2,
+	T_ABB_WFF_W1DD,	//water
 	T_ABB_WFF_W2F2F2,
 	T_ABB_WFF_W1F2F2,
 	T_ABB_DF2F2,	//water
