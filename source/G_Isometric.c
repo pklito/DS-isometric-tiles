@@ -9,6 +9,7 @@ typedef enum {
 	FACE_WALL_LEFT = 0b01,
 	FACE_WALL_RIGHT = 0b10
 } BlockFaces;
+
 inline void _setSlice(u16* tiles, int tile, TileSlices slice, u8 color,BlockFaces face){
 	tiles[tile] &= ~((SLICE_MASK << slice) | BIT(15));
 	tiles[tile] ^= ((face<<3) | color) << slice | BIT(15);
@@ -88,15 +89,40 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	u8 top_color = top & 0b00111;
 	u8 top_face = (top & 0b11000) >> 3;
 	switch(tile_type){
+	case T_FULL:
+		return _isFloor(bottom) ? bottom : (bot_face + 2*bot_color);
+		//One floor alone
 	case T_AAB_DDF2:
-		return 2 * bot_color;
+	case T_ABB_DF2F2:
+		return 2 * (bot_color-1);
+		//Two floors
 	case T_AAB_F1F1F2:
+	case T_ABA_F1F2F1:
+	case T_ABB_F1F2F2:
 		return 2 * mid_color + (bot_color > mid_color);	//1 1 2
+		//Floor and its wall
 	case T_AAB_F1F1W1:
-		//printf("%d - %d %d %d %d %d %d\n",4 * (bot_face-1) + ((2 * mid_color)+!(bot_face==1))%4, bot_color,bot_face,mid_color,mid_face,top_color,top_face);
-		return 4 * (bot_face-1) + ((2 * (mid_color-1))+!(bot_face==1))%4;			//4 4 5	 if left wall, F1 F1 F2 F2, (4 + F2 F1 F1 F2)
-	default:
-		return 1;
+	case T_AAB_WWX_W1W1F1:
+	case T_ABA_F1W1F1:
+	case T_ABA_W1F1W1:
+	case T_ABB_F1W1W1:
+	case T_ABB_WFF_W2F2F2:
+		return 4 * (bot_face-1) + ((2 * (bot_color-1))+!(bot_face==1))%4;			//4 4 5	 if left wall, F1 F1 F2 F2, (4 + F2 F1 F1 F2)
+		//One wall
+	case T_AAB_WWX_W1W1F2:
+	case T_AAB_WWX_W1W1D:
+	case T_ABB_WFF_W1DD:
+	case T_ABB_WFF_W1F2F2:
+		return 2*((mid_color-1)^(mid_face-1)) + 4*(mid_face-1);
+		//Both wall colors (extra bit for the side of wallB)
+	case T_AAB_WWX_W1W1W2:
+		return 2*((mid_color-1)^(mid_face-1)) + 4*(mid_face-1) + (bot_face-1);
+		//(edge case)
+	case T_AAB_WWX_W1BW1BW1:
+	case T_AAB_WWX_W1W1W1B:
+		return 5 + bot_color;
+	//printf("%d - %d %d %d %d %d %d\n",4 * (bot_face-1) + ((2 * mid_color)+!(bot_face==1))%4, bot_color,bot_face,mid_color,mid_face,top_color,top_face);
+
 	}
 
 	return 0;
@@ -126,7 +152,7 @@ void ISO_RenderTiles(s8* world){
 		switch(unique_colors){
 		case 1:
 			//Check if the solid color is a wall or not. see COLOR_PALETTE first row
-			palette = (_isFloor(bottom) ? bottom : ((bottom & 0b11000)>>3) + (bottom<<1));
+			palette = _paletteFinder(T_FULL, bottom, middle, top);
 			BG_MAP_RAM(3)[j] = isFlipped | T_FULL | palette<<12;
 			break;
 		case 2:
