@@ -93,6 +93,12 @@ inline int _p_w1_f2(u8 wall_color, u8 wall_type, u8 other_floor_color){
 	else
 		return 4 + (wall_color==1) + 2 *(other_floor_color==3);
 }
+inline int _p_w1_w2(u8 wall_color,u8 wall_type, u8 other_wall_type){
+	return 4 * (wall_type==2) + ((wall_type==1)+1)*(wall_color) + ((wall_type==2)+1)*(other_wall_type==2);
+}
+inline int _p_w1_f2_f3(u8 wall_color, u8 wall_type, u8 face_color, u8 last_face_color){
+	return _p_w1_f2(wall_color, wall_type, face_color);
+}
 int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	u8 bot_color = bottom & 0b00111;
 	u8 bot_face = (bottom & 0b11000) >> 3;
@@ -148,18 +154,15 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 
 		//Both wall colors (extra bit for the side of wallB)
 	case T_AAB_WWX_W1W1W2:	//556
-		return 2*((mid_color-1)^(mid_face-1)) + 4*(mid_face-1) + (bot_face-1);
+		return _p_w1_w2(mid_color,mid_face,bot_face);
 		//(edge case)
 	case T_AAB_WWX_W1BW1BW1:
 	case T_AAB_WWX_W1W1W1B:
-		return 5 + bot_color;
+		return 8 - bot_color;
 	/* Three colors */
 
 	case T_ABC_WFF_W1F2F3:	//523
-		if(top_face == 0b1)
-			return (mid_color > bot_color) + 2*(top_color);
-		else
-			return 0;
+		return _p_w1_f2_f3(top_color, top_face, mid_color, bot_color);
 
 
 
