@@ -76,10 +76,10 @@ inline bool _isWater(u8 color){
 	return color == 0;
 }
 inline bool _isLeftWall(u8 color){
-	return (color&0b11000) == 1;
+	return (color&0b11000)>>3 == 1;
 }
 inline bool _isRightWall(u8 color){
-	return (color&0b11000) == 2;
+	return (color&0b11000)>>3 == 2;
 }
 inline int _p_f1_f2(u8 primary_color, u8 secondary_color){
 	return 2 * (primary_color-1) + (2*secondary_color > (5-primary_color));
