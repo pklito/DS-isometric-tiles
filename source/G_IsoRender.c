@@ -3,6 +3,7 @@
  *
  *  In charge of tile graphics
  */
+#include <stdio.h>
 #include "G_IsoRender.h"
 
 inline bool _isFloor(u8 color){
@@ -322,36 +323,7 @@ void ISO_RenderTiles(s8* world){
 	}
 }
 
-s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz){
-	int tile = TILES_ORIGIN;
-
-	//get the "floor coordinates" equivalent
-
-	s16 x = (s8)px;
-	s16 y = (s8)py;
-
-
-	//calculate the tile offset from the origin
-	int offset_x = (y - x);
-	int offset_y = (x+y)/2 - pz;
-	tile += (offset_x + TILES_SHAPE_WIDTH * offset_y);
-
-	return tile;
-}
-
-/*
- * Gives the bottom left solution.
- * return = (px) | (py << 8);  //pz = 0
- * or return = U16_MAX in case of failure
- *
- * returns the lowest tile affecting this one (the bottom triangle)
- *
- */
-u16 ISO_convertTileToWorld(u16 tile);
-
-
 /* TILES */
-
 u8 TILE_FULL[] = {
 		0x77,0x77,0x77,0x77,
 		0x77,0x77,0x77,0x77,
@@ -732,3 +704,4 @@ void ISO_InitTiles(){
 	dmaCopy(TILE_ABC_DF2F3, &BG_TILE_RAM(0)[T_ABC_DF2F3<<4], 32);
 	dmaCopy(TILE_ABC_DF2W2, &BG_TILE_RAM(0)[T_ABC_DF2W2<<4], 32);
 }
+

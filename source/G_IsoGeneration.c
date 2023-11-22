@@ -35,6 +35,8 @@ void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8
 				//get topleft tile
 				int tile = ISO_convertWorldToTile(i,j,k);
 
+				//this block goes off screen
+				if(tile == -1) continue;
 				//is this block half shifted down?
 				bool is_full = ((i+j)%2 == 0);
 				if(is_full){
@@ -71,3 +73,30 @@ void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8
 	}
 }
 
+s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz){
+	int tile = TILES_ORIGIN;
+
+	//get the "floor coordinates" equivalent
+
+	s16 x = (s8)px;
+	s16 y = (s8)py;
+
+
+	//calculate the tile offset from the origin
+	int offset_x = (y - x);
+	int offset_y = (x+y)/2 - pz;
+	if(tile%TILES_SHAPE_WIDTH + offset_x < 0 || tile%TILES_SHAPE_WIDTH + offset_x >= TILES_SHAPE_WIDTH) return -1;
+	tile += (offset_x + TILES_SHAPE_WIDTH * offset_y);
+	if(tile < 0 || tile/TILES_SHAPE_WIDTH >= TILES_SHAPE_HEIGHT) return -1;
+	return tile;
+}
+
+/*
+ * Gives the bottom left solution.
+ * return = (px) | (py << 8);  //pz = 0
+ * or return = U16_MAX in case of failure
+ *
+ * returns the lowest tile affecting this one (the bottom triangle)
+ *
+ */
+u16 ISO_convertTileToWorld(u16 tile);
