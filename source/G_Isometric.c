@@ -81,6 +81,12 @@ inline bool _isLeftWall(u8 color){
 inline bool _isRightWall(u8 color){
 	return (color&0b11000) == 2;
 }
+inline int _p_f1_f2(u8 primary_color, u8 secondary_color){
+	return 2 * (primary_color-1) + (2*secondary_color > (5-primary_color));
+}
+inline int _p_w1(u8 floor_color, u8 wall_type){
+	return 4 * (wall_type-1) + 2 * (floor_color-1) + (floor_color==1);
+}
 int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	u8 bot_color = bottom & 0b00111;
 	u8 bot_face = (bottom & 0b11000) >> 3;
@@ -98,30 +104,30 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 		//Two floors	(mid,bot)
 	case T_AAB_F1F1F2:	//112
 	case T_ABC_DF2F3:	//012
-		return 2 * (mid_color-1) + (2*bot_color > (5-mid_color));	//
+		return _p_f1_f2(mid_color,bot_color);//
 		//Two floors (top, mid)
 	case T_ABA_F1F2F1:	//121
 	case T_ABB_F1F2F2:	//122
 	case T_ABC_F1F2F3:	//123
-		return 2 * (top_color-1) + (2*mid_color > (5-top_color));
+		return _p_f1_f2(top_color,mid_color);
 		//Floor and its wall
 	case T_AAB_F1F1W1:	//445
 	case T_ABA_W1F1W1:	//545
 	case T_ABB_F1W1W1:	//455
 	case T_ABC_DF2W2:	//045
-		return 4 * (bot_face-1) + ((2 * (bot_color-1))+!(bot_face==1))%4;			//4 4 5	 if left wall, F1 F1 F2 F2, (4 + F2 F1 F1 F2)
+		return _p_w1(bot_color,bot_face);			//4 4 5	 if left wall, F1 F1 F2 F2, (4 + F2 F1 F1 F2)
 		//Floor and it's top wall
 	case T_ABB_WFF_W2F2F2:	//544
 	case T_AAB_WWX_W1W1F1:	//554
-		return 4 * (top_face-1) + ((2 * (top_color-1)) + !(top_face==1))%4;
+		return _p_w1(top_color,top_face);
 		//Floor and it's mid wall
 	case T_ABA_F1W1F1:	//454
-		return 4 * (mid_face-1) + ((2 * (mid_color-1)) + !(mid_face==1))%4;
+		return _p_w1(mid_color,mid_face);
 
 		//One wall (top)
 	case T_AAB_WWX_W1W1D:	//550
 	case T_ABB_WFF_W1DD:	//500
-		return 2*((top_color-1)^(top_face-1)) + 4*(top_face-1);
+		return _p_w1(top_color,top_face);
 
 	case T_AAB_WWX_W1W1F2:	//552
 	case T_ABB_WFF_W1F2F2:	//522
@@ -147,7 +153,7 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 		if(top_face == 0b1)
 			return (mid_color > bot_color) + 2*(top_color);
 		else
-			return
+			return 0;
 
 
 
