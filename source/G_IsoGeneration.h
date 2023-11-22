@@ -1,7 +1,7 @@
 /*
- * G_Isometric.h
+ * G_Isometric_generation.h
  *
- *  Created on: Nov 18, 2023
+ *  Created on: Nov 22, 2023
  *      Author: nds
  */
 #pragma once
@@ -58,7 +58,6 @@ typedef enum {
 
 } TileTypes;
 
-void ISO_RenderTiles(s8* world);
 void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z);
 void ISO_GenerateTilesInverse(u16* tiles);
 /*
@@ -77,4 +76,4 @@ s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz);
  */
 u16 ISO_convertTileToWorld(u16 tile);
 
-void ISO_InitTiles();
+
