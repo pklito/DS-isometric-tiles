@@ -357,8 +357,8 @@ s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz){
 	int tile = TILES_ORIGIN;
 
 	//get the "floor coordinates" equivalent
-	s16 x = px - 2*pz;
-	s16 y = py - 2*pz;
+	s16 x = px - pz;
+	s16 y = py - pz;
 
 	//calculate the tile offset from the origin
 	int offset_x = (y - x);
