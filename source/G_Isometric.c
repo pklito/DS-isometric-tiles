@@ -139,9 +139,11 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	case T_ABB_WFF_W1DD:	//500
 		return _p_w1(top_color,top_face);
 
+		//Wall and opposing floor
 	case T_AAB_WWX_W1W1F2:	//552
 	case T_ABB_WFF_W1F2F2:	//522
 	case T_ABC_WFF_W2F2F3:	//542
+	case T_ABC_WFF_W1DF3:
 		return _p_w1_f2(top_color,top_face,bot_color);
 	case T_ABC_F1F2W2:		//245
 		return _p_w1_f2(bot_color,bot_face,top_color);
@@ -168,7 +170,7 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 
 	}
 
-	return 0;
+	return 10;
 }
 
 u16 tiles[TILES_SHAPE_WIDTH * TILES_SHAPE_HEIGHT];
