@@ -301,7 +301,16 @@ void ISO_RenderTiles(s8* world){
 
 		case 3:
 			//Three different colors. most _isSameBlock tests are just to catch for errors.
-			if(_isFloor(top) && _isFloor(middle) && _isFloor(bottom)){	//F1F2F3
+			if(_isWater(top) && _isFloor(middle) && _isFloor(bottom)){	//DF2F3
+				tile_index = T_ABC_DF2F3;
+				palette = _paletteFinder(T_ABC_DF2F3, bottom,middle,top);
+			}
+			else if(_isWater(top) && _isFloor(middle) && !_isFloor(bottom) && _isSameBlock(middle,bottom)){
+				tile_index = T_ABC_DF2W2;
+				palette = _paletteFinder(T_ABC_DF2W2, bottom,middle,top);
+
+			}
+			else if(_isFloor(top) && _isFloor(middle) && _isFloor(bottom)){	//F1F2F3
 				tile_index = T_ABC_F1F2F3;
 				palette = _paletteFinder(T_ABC_F1F2F3, bottom,middle,top);
 			}
