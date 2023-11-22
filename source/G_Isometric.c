@@ -96,9 +96,6 @@ inline int _p_w1_f2(u8 wall_color, u8 wall_type, u8 other_floor_color){
 inline int _p_w1_w2(u8 wall_color,u8 wall_type, u8 other_wall_type){
 	return 4 * (wall_type==2) + ((wall_type==1)+1)*(wall_color) + ((wall_type==2)+1)*(other_wall_type==2);
 }
-inline int _p_w1_f2_f3(u8 wall_color, u8 wall_type, u8 face_color, u8 last_face_color){
-	return _p_w1_f2(wall_color, wall_type, face_color);
-}
 int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	u8 bot_color = bottom & 0b00111;
 	u8 bot_face = (bottom & 0b11000) >> 3;
@@ -148,6 +145,7 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	case T_ABC_F1F2W2:		//245
 		return _p_w1_f2(bot_color,bot_face,top_color);
 	case T_ABC_WFF_W3F2F3:	//524
+	case T_ABC_WFF_W1F2F3:	//523S
 		return _p_w1_f2(top_color,top_face,mid_color);
 	case T_ABC_F1W1F2:
 		return _p_w1_f2(mid_color, mid_face, bot_color);
@@ -160,9 +158,6 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	case T_AAB_WWX_W1W1W1B:
 		return 8 - bot_color;
 	/* Three colors */
-
-	case T_ABC_WFF_W1F2F3:	//523
-		return _p_w1_f2_f3(top_color, top_face, mid_color, bot_color);
 
 
 
