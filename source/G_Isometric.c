@@ -125,9 +125,14 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 
 	case T_AAB_WWX_W1W1F2:	//552
 	case T_ABB_WFF_W1F2F2:	//522
+	case T_ABC_WFF_W2F2F3:	//542
 		return 2*((top_color-1)^(top_face-1)) + 4*(top_face-1)+(2*bot_color > (5-top_color));
-	case T_ABC_F1F2W2:		//542
+	case T_ABC_F1F2W2:		//245
 		return 2*((bot_color-1)^(bot_face-1)) + 4*(bot_face-1) + (2*bot_color > (5-top_color));
+
+	case T_ABC_WFF_W3F2F3:	//524
+		return 2*((top_color-1)^(top_face-1)) + 4*(top_face-1)+(2*mid_color > (5-top_color));
+
 
 		//Both wall colors (extra bit for the side of wallB)
 	case T_AAB_WWX_W1W1W2:	//556
@@ -137,6 +142,12 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	case T_AAB_WWX_W1W1W1B:
 		return 5 + bot_color;
 	/* Three colors */
+
+	case T_ABC_WFF_W1F2F3:	//523
+		if(top_face == 0b1)
+			return (mid_color > bot_color) + 2*(top_color);
+		else
+			return
 
 
 
