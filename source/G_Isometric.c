@@ -95,25 +95,36 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	case T_AAB_DDF2:
 	case T_ABB_DF2F2:
 		return 2 * (bot_color-1);
-		//Two floors
+		//Two floors	(mid,bot)
 	case T_AAB_F1F1F2:
+	case T_ABC_DF2F3:	//ABC
+		return 2 * (mid_color-1) + (2*bot_color > (5-mid_color));	//
+		//Two floors (top, mid)
 	case T_ABA_F1F2F1:
 	case T_ABB_F1F2F2:
-		return 2 * mid_color + (bot_color > mid_color);	//1 1 2
+		return 2 * (top_color-1) + (2*mid_color > (5-top_color));
 		//Floor and its wall
 	case T_AAB_F1F1W1:
-	case T_AAB_WWX_W1W1F1:
 	case T_ABA_F1W1F1:
 	case T_ABA_W1F1W1:
 	case T_ABB_F1W1W1:
-	case T_ABB_WFF_W2F2F2:
+	case T_ABC_DF2W2:
 		return 4 * (bot_face-1) + ((2 * (bot_color-1))+!(bot_face==1))%4;			//4 4 5	 if left wall, F1 F1 F2 F2, (4 + F2 F1 F1 F2)
-		//One wall
-	case T_AAB_WWX_W1W1F2:
+		//Floor and it's top wall
+	case T_ABB_WFF_W2F2F2:
+	case T_AAB_WWX_W1W1F1:
+		return 4 * (top_face-1) + ((2 * (top_color-1)) + !(bot_face==1))%4;
+		//One wall (top)
 	case T_AAB_WWX_W1W1D:
 	case T_ABB_WFF_W1DD:
-	case T_ABB_WFF_W1F2F2:
-		return 2*((mid_color-1)^(mid_face-1)) + 4*(mid_face-1);
+		return 2*((top_color-1)^(top_face-1)) + 4*(top_face-1);
+
+	case T_AAB_WWX_W1W1F2:	//unsure
+	case T_ABB_WFF_W1F2F2:	//unsure
+		return 2*((top_color-1)^(top_face-1)) + 4*(top_face-1)+(bot_color >= (top_color-1));
+	case T_ABC_F1F2W2:		//unsure
+		return 2*((bot_color-1)^(bot_face-1)) + 4*(bot_face-1) + (top_color >= (bot_color-1));	//(wrong)
+
 		//Both wall colors (extra bit for the side of wallB)
 	case T_AAB_WWX_W1W1W2:
 		return 2*((mid_color-1)^(mid_face-1)) + 4*(mid_face-1) + (bot_face-1);
@@ -121,6 +132,14 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	case T_AAB_WWX_W1BW1BW1:
 	case T_AAB_WWX_W1W1W1B:
 		return 5 + bot_color;
+	/* Three colors */
+
+	case T_ABC_F1F2F3:	//ABC		TODO merge with two colors by changing the tile
+		return 2 * (top_color-1) + (mid_color > top_color);
+
+
+
+
 	//printf("%d - %d %d %d %d %d %d\n",4 * (bot_face-1) + ((2 * mid_color)+!(bot_face==1))%4, bot_color,bot_face,mid_color,mid_face,top_color,top_face);
 
 	}
@@ -277,8 +296,6 @@ void ISO_RenderTiles(s8* world){
 			else{
 				printf("???: %d %d %d %d\n",j,bottom,middle,top);
 			}
-
-			if(palette > 10) printf("2: %d\n",j);
 			BG_MAP_RAM(3)[j] = isFlipped | tile_index | palette<<12;
 			break;
 
@@ -319,7 +336,7 @@ void ISO_RenderTiles(s8* world){
 			else{
 				printf("ERROR - pattern: ABC\n %d, %x,%x,%x\n",j, bottom, middle, top);
 			}
-			if(palette > 10) printf("%d\n",j);
+			if(palette > 10) printf("3 - %d\n",j);
 			BG_MAP_RAM(3)[j] = isFlipped | tile_index | palette<<12;
 			break;
 
