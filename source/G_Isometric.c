@@ -128,6 +128,7 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 		//Floor and it's top wall
 	case T_ABB_WFF_W2F2F2:	//544
 	case T_AAB_WWX_W1W1F1:	//554
+	case T_ABC_WFF_W1DF1:
 		return _p_w1(top_color,top_face);
 		//Floor and it's mid wall
 	case T_ABA_F1W1F1:	//454
@@ -348,7 +349,11 @@ void ISO_RenderTiles(s8* world){
 
 			else if(!_isFloor(top) && _isFloor(middle) && _isFloor(bottom)){	//WFF
 
-				if(_isWater(middle)){
+				if(_isWater(middle) && _isSameBlock(top,bottom)){
+					tile_index = T_ABC_WFF_W1DF1;
+					palette = _paletteFinder(T_ABC_WFF_W1DF1,bottom,middle,top);
+				}
+				else if(_isWater(middle)){
 					tile_index = T_ABC_WFF_W1DF3;
 					palette = _paletteFinder(T_ABC_WFF_W1DF3, bottom,middle,top);
 				}
@@ -497,6 +502,16 @@ u8 TILE_ABC_WFF_W1F2F3[] = {
 		0x33,0x33,0x33,0x33
 };
 //TODO Not complete? not possible to map in one tile
+u8 TILE_ABC_WFF_W1DF1[] = {
+		0x55,0x55,0x55,0x00,
+		0x55,0x55,0x00,0x00,
+		0x55,0x00,0x00,0x00,
+		0x00,0x00,0x00,0x00,
+		0x44,0x00,0x00,0x00,
+		0x44,0x44,0x00,0x00,
+		0x44,0x44,0x44,0x00,
+		0x44,0x44,0x44,0x44
+};
 u8 TILE_ABC_WFF_W1DF3[] = {
 		0x55,0x55,0x55,0x00,
 		0x55,0x55,0x00,0x00,
@@ -507,7 +522,6 @@ u8 TILE_ABC_WFF_W1DF3[] = {
 		0x22,0x22,0x22,0x00,
 		0x22,0x22,0x22,0x22
 };
-
 //TODO Catch W1F2W2 case, W2BF2W2?
 u8 TILE_ABC_W1F2W2[] = {
 		0x55,0x55,0x55,0x44,
@@ -771,6 +785,7 @@ void ISO_InitTiles(){
 	dmaCopy(TILE_ABC_WFF_W2F2F3, &BG_TILE_RAM(0)[T_ABC_WFF_W2F2F3<<4], 32);
 	dmaCopy(TILE_ABC_WFF_W3F2F3, &BG_TILE_RAM(0)[T_ABC_WFF_W3F2F3<<4], 32);
 	dmaCopy(TILE_ABC_WFF_W1DF3, &BG_TILE_RAM(0)[T_ABC_WFF_W1DF3<<4], 32);
+	dmaCopy(TILE_ABC_WFF_W1DF1, &BG_TILE_RAM(0)[T_ABC_WFF_W1DF1<<4], 32);
 	dmaCopy(TILE_ABC_DF2F3, &BG_TILE_RAM(0)[T_ABC_DF2F3<<4], 32);
 	dmaCopy(TILE_ABC_DF2W2, &BG_TILE_RAM(0)[T_ABC_DF2W2<<4], 32);
 }

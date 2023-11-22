@@ -52,7 +52,8 @@ typedef enum {
 	T_ABC_WFF_W2F2F3,
 	T_ABC_WFF_W3F2F3,
 	T_ABC_WFF_W1F2F3,
-	T_ABC_WFF_W1DF3
+	T_ABC_WFF_W1DF3,
+	T_ABC_WFF_W1DF1
 
 
 } TileTypes;
