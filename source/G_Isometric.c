@@ -19,7 +19,7 @@ inline void _setWhole(u16* tiles, int tile, u8 color_top, BlockFaces face_top, u
 }
 void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
 	int i,j,k;
-	u8 scale = 2;
+	u8 scale = 1;
 	for(k = 0; k < world_dim_z * scale; k++){
 		for(j = 0; j < world_dim_y * scale; j++){
 			for(i = 0; i < world_dim_x * scale; i++){
@@ -90,50 +90,54 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	u8 top_face = (top & 0b11000) >> 3;
 	switch(tile_type){
 	case T_FULL:
-		return _isFloor(bottom) ? bottom : (bot_face + 2*bot_color);
+		return _isFloor(bottom) ? bottom : 4+(bot_face-1 + 2*(bot_color-1));
 		//One floor alone
-	case T_AAB_DDF2:
-	case T_ABB_DF2F2:
+	case T_AAB_DDF2:	//001
+	case T_ABB_DF2F2:	//011
 		return 2 * (bot_color-1);
 		//Two floors	(mid,bot)
-	case T_AAB_F1F1F2:
-	case T_ABC_DF2F3:	//ABC
+	case T_AAB_F1F1F2:	//112
+	case T_ABC_DF2F3:	//012
 		return 2 * (mid_color-1) + (2*bot_color > (5-mid_color));	//
 		//Two floors (top, mid)
-	case T_ABA_F1F2F1:
-	case T_ABB_F1F2F2:
-	case T_ABC_F1F2F3:
+	case T_ABA_F1F2F1:	//121
+	case T_ABB_F1F2F2:	//122
+	case T_ABC_F1F2F3:	//123
 		return 2 * (top_color-1) + (2*mid_color > (5-top_color));
 		//Floor and its wall
-	case T_AAB_F1F1W1:
-	case T_ABA_F1W1F1:
-	case T_ABA_W1F1W1:
-	case T_ABB_F1W1W1:
-	case T_ABC_DF2W2:
+	case T_AAB_F1F1W1:	//445
+	case T_ABA_W1F1W1:	//545
+	case T_ABB_F1W1W1:	//455
+	case T_ABC_DF2W2:	//045
 		return 4 * (bot_face-1) + ((2 * (bot_color-1))+!(bot_face==1))%4;			//4 4 5	 if left wall, F1 F1 F2 F2, (4 + F2 F1 F1 F2)
 		//Floor and it's top wall
-	case T_ABB_WFF_W2F2F2:
-	case T_AAB_WWX_W1W1F1:
-		return 4 * (top_face-1) + ((2 * (top_color-1)) + !(bot_face==1))%4;
+	case T_ABB_WFF_W2F2F2:	//544
+	case T_AAB_WWX_W1W1F1:	//554
+		return 4 * (top_face-1) + ((2 * (top_color-1)) + !(top_face==1))%4;
+		//Floor and it's mid wall
+	case T_ABA_F1W1F1:	//454
+		return 4 * (mid_face-1) + ((2 * (mid_color-1)) + !(mid_face==1))%4;
+
 		//One wall (top)
-	case T_AAB_WWX_W1W1D:
-	case T_ABB_WFF_W1DD:
+	case T_AAB_WWX_W1W1D:	//550
+	case T_ABB_WFF_W1DD:	//500
 		return 2*((top_color-1)^(top_face-1)) + 4*(top_face-1);
 
-	case T_AAB_WWX_W1W1F2:	//unsure
-	case T_ABB_WFF_W1F2F2:	//unsure
+	case T_AAB_WWX_W1W1F2:	//552
+	case T_ABB_WFF_W1F2F2:	//522
 		return 2*((top_color-1)^(top_face-1)) + 4*(top_face-1)+(2*bot_color > (5-top_color));
-	case T_ABC_F1F2W2:		//unsure
-		return 2*((bot_color-1)^(bot_face-1)) + 4*(bot_face-1) + (2*bot_color > (5-top_color));	//(wrong)
+	case T_ABC_F1F2W2:		//542
+		return 2*((bot_color-1)^(bot_face-1)) + 4*(bot_face-1) + (2*bot_color > (5-top_color));
 
 		//Both wall colors (extra bit for the side of wallB)
-	case T_AAB_WWX_W1W1W2:
+	case T_AAB_WWX_W1W1W2:	//556
 		return 2*((mid_color-1)^(mid_face-1)) + 4*(mid_face-1) + (bot_face-1);
 		//(edge case)
 	case T_AAB_WWX_W1BW1BW1:
 	case T_AAB_WWX_W1W1W1B:
 		return 5 + bot_color;
 	/* Three colors */
+
 
 
 
@@ -471,19 +475,20 @@ u8 TILE_ABC_WFF_W1F2F3[] = {
 		0x33,0x33,0x33,0x22,
 		0x33,0x33,0x33,0x33
 };
+//TODO Not complete? not possible to map in one tile
 u8 TILE_ABC_WFF_W1DF3[] = {
 		0x55,0x55,0x55,0x00,
 		0x55,0x55,0x00,0x00,
 		0x55,0x00,0x00,0x00,
 		0x00,0x00,0x00,0x00,
-		0x33,0x00,0x00,0x00,
-		0x33,0x33,0x00,0x00,
-		0x33,0x33,0x33,0x00,
-		0x33,0x33,0x33,0x33
+		0x22,0x00,0x00,0x00,
+		0x22,0x22,0x00,0x00,
+		0x22,0x22,0x22,0x00,
+		0x22,0x22,0x22,0x22
 };
 
 //TODO Catch W1F2W2 case, W2BF2W2?
-u8 TILE_ABC_WFF_W1F2W2[] = {
+u8 TILE_ABC_W1F2W2[] = {
 		0x55,0x55,0x55,0x44,
 		0x55,0x55,0x22,0x44,
 		0x55,0x22,0x22,0x44,
@@ -493,6 +498,8 @@ u8 TILE_ABC_WFF_W1F2W2[] = {
 		0x33,0x33,0x44,0x44,
 		0x33,0x33,0x44,0x44
 };
+
+
 /*Two are same*/
 u8 TILE_ABA_F1F2F1[] = {
 		0x11,0x11,0x11,0x22,
