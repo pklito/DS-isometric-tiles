@@ -102,6 +102,7 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 		//Two floors (top, mid)
 	case T_ABA_F1F2F1:
 	case T_ABB_F1F2F2:
+	case T_ABC_F1F2F3:
 		return 2 * (top_color-1) + (2*mid_color > (5-top_color));
 		//Floor and its wall
 	case T_AAB_F1F1W1:
@@ -121,9 +122,9 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 
 	case T_AAB_WWX_W1W1F2:	//unsure
 	case T_ABB_WFF_W1F2F2:	//unsure
-		return 2*((top_color-1)^(top_face-1)) + 4*(top_face-1)+(bot_color >= (top_color-1));
+		return 2*((top_color-1)^(top_face-1)) + 4*(top_face-1)+(2*bot_color > (5-top_color));
 	case T_ABC_F1F2W2:		//unsure
-		return 2*((bot_color-1)^(bot_face-1)) + 4*(bot_face-1) + (top_color >= (bot_color-1));	//(wrong)
+		return 2*((bot_color-1)^(bot_face-1)) + 4*(bot_face-1) + (2*bot_color > (5-top_color));	//(wrong)
 
 		//Both wall colors (extra bit for the side of wallB)
 	case T_AAB_WWX_W1W1W2:
@@ -133,9 +134,6 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	case T_AAB_WWX_W1W1W1B:
 		return 5 + bot_color;
 	/* Three colors */
-
-	case T_ABC_F1F2F3:	//ABC		TODO merge with two colors by changing the tile
-		return 2 * (top_color-1) + (mid_color > top_color);
 
 
 
@@ -482,6 +480,18 @@ u8 TILE_ABC_WFF_W1DF3[] = {
 		0x33,0x33,0x00,0x00,
 		0x33,0x33,0x33,0x00,
 		0x33,0x33,0x33,0x33
+};
+
+//TODO Catch W1F2W2 case, W2BF2W2?
+u8 TILE_ABC_WFF_W1F2W2[] = {
+		0x55,0x55,0x55,0x44,
+		0x55,0x55,0x22,0x44,
+		0x55,0x22,0x22,0x44,
+		0x22,0x22,0x22,0x44,
+		0x33,0x22,0x22,0x44,
+		0x33,0x33,0xaa,0x44,
+		0x33,0x33,0x44,0x44,
+		0x33,0x33,0x44,0x44
 };
 /*Two are same*/
 u8 TILE_ABA_F1F2F1[] = {
