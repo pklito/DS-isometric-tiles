@@ -88,7 +88,7 @@ inline int _p_w1(u8 floor_color, u8 wall_type){
 	return 4 * (wall_type-1) + 2 * (floor_color-1) + (floor_color==1);
 }
 inline int _p_w1_f2(u8 wall_color, u8 wall_type, u8 other_floor_color){
-	if(_isLeftWall(wall_type))
+	if(wall_type==1)
 		return _p_f1_f2(wall_color,other_floor_color);	//first 4 rows color choice
 	else
 		return 4 + (wall_color==1) + 2 *(other_floor_color==3);
@@ -143,6 +143,8 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 		return _p_w1_f2(bot_color,bot_face,top_color);
 	case T_ABC_WFF_W3F2F3:	//524
 		return _p_w1_f2(top_color,top_face,mid_color);
+	case T_ABC_F1W1F2:
+		return _p_w1_f2(mid_color, mid_face, bot_color);
 
 		//Both wall colors (extra bit for the side of wallB)
 	case T_AAB_WWX_W1W1W2:	//556
