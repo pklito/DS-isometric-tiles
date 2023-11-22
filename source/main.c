@@ -1,47 +1,19 @@
 #include <math.h>
 #include <nds.h>
-#include "G_Isometric.h"
+#include "G_IsoRender.h"
 #include "P_Graphics.h"
-
-s8 WORLD_MAP[] = {
-		1,0,0,0,1,0,0,0,
-				0,0,0,0,0,0,0,0,
-				0,0,0,0,0,0,0,0,
-				0,0,0,0,0,0,0,0,
-				1,0,0,0,0,0,0,0,
-				0,0,0,0,0,1,0,0,
-				0,0,0,0,0,0,0,0,
-				0,0,0,0,0,0,0,0,
-
-		1,1,0,1,0,1,0,1,
-				1,0,0,0,0,0,0,0,
-				0,0,0,0,0,0,0,0,
-				1,0,0,0,0,0,0,0,
-				0,0,0,0,0,0,0,0,
-				1,0,0,0,0,0,1,0,
-				0,0,0,0,0,0,0,0,
-				0,0,0,0,0,0,0,0,
-
-		1,0,1,0,0,0,1,0,
-		0,0,0,0,0,0,0,0,
-		1,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,1,
-		1,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0
-};
+#include "G_Controls.h"
+#include "game.h"
 
 int main(void)
 {
 	consoleDemoInit();
 
 	Graphics_SetupMain();
-
-	//printf("%d\n", convertWorldToTile(0,0,0));
-	ISO_RenderTiles(WORLD_MAP);
+	Game_InitInput();
+	Game_InitScreen();
 	while(1) {
-		//Graphics_SwapBuffers(MAIN);
+		Game_HandleInput();
 
 		swiWaitForVBlank();
 	}

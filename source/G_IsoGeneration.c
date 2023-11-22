@@ -22,7 +22,7 @@ inline void _setWhole(u16* tiles, int tile, u8 color_top, BlockFaces face_top, u
 
 void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
 	int i,j,k;
-	u8 scale = 3;
+	u8 scale = 4;
 
 	for(k = 0; k < world_dim_z * scale; k++){
 		for(j = 0; j < world_dim_y * scale; j++){
@@ -99,4 +99,6 @@ s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz){
  * returns the lowest tile affecting this one (the bottom triangle)
  *
  */
-u16 ISO_convertTileToWorld(u16 tile);
+u16 ISO_convertTileToWorld(u16 tile){
+
+}
