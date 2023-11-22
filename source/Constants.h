@@ -16,7 +16,7 @@
 
 /* VISUALS */
 //where zero zero starts on screen
-#define TILES_ORIGIN 45
+#define TILES_ORIGIN 109
 #define TILES_SHAPE BG_32x32
 #define TILES_SHAPE_WIDTH 32
 #define TILES_SHAPE_HEIGHT 32
