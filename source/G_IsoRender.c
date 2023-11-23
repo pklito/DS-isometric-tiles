@@ -149,8 +149,8 @@ void ISO_RenderTiles(s8* world){
 					palette = _paletteFinder(T_ABA_F1F2F1, bottom,middle,top);
 				}
 				else if(_isFloor(top) && !_isFloor(middle) && _isFloor(bottom) && _isSameBlock(top,middle)){	//F1W1F1
-					tile_index = T_ABA_F1F2F1;
-					palette = _paletteFinder(T_ABA_F1F2F1, bottom,middle,top);
+					tile_index = T_ABA_F1W1F1;
+					palette = _paletteFinder(T_ABA_F1W1F1, bottom,middle,top);
 				}
 				else if(!_isFloor(top) && _isFloor(middle) && !_isFloor(bottom) && _isSameBlock(top,middle)){	//W1F1W1
 					tile_index = T_ABA_W1F1W1;
