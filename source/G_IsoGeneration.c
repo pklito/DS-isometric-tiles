@@ -34,9 +34,6 @@ void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8
 				//get topleft tile
 				s8 cull = 0;
 				int tile = ISO_convertWorldToTile(i,j,k, &cull);
-				if(cull != 0) printf("%d ",cull);
-
-				if(tile <= 0) printf("t: %d c: %d\n",tile,cull);
 				//this block goes off screen
 				if(tile == -1) continue;
 				//is this block half shifted down?

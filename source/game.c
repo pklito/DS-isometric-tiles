@@ -49,3 +49,8 @@ void Game_Refresh(){
 void Game_MoveScreen(int x, int y){
 	TILES_ORIGIN += 32*y + x;
 }
+
+void Game_SetScale(u8 scale){
+	if(scale <= 0) return;
+	SCALE = scale;
+}
