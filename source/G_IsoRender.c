@@ -112,9 +112,10 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 
 	return 10;
 }
-
+extern int TILES_ORIGIN;
 u16 tiles[TILES_SHAPE_WIDTH * TILES_SHAPE_HEIGHT];
 void ISO_RenderTiles(s8* world){
+	memset(tiles,0,2*TILES_SHAPE_HEIGHT*TILES_SHAPE_WIDTH);
 	ISO_GenerateTiles(tiles, world, WORLD_DIM_X, WORLD_DIM_Y, WORLD_DIM_Z);
 	int j;
 	for(j = 0; j < TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT/1; j++){
@@ -131,7 +132,7 @@ void ISO_RenderTiles(s8* world){
 		int unique_colors = 3 - ((bottom==middle) + (middle==top||top==bottom));
 			//printf("(%d,%d) %d %d %d, %d\n",j%32,j/32,bottom, middle, top,tile);
 		//I flip every other tile to create the diamond shapes.
-		u16 isFlipped = ((j%2) == 0 ? BIT(10) : 0);
+		u16 isFlipped = ((j%2) != ((TILES_ORIGIN*TILES_ORIGIN)%2) ? BIT(10) : 0);
 		byte palette = 0xff;
 		u16 tile_index = 10;
 		switch(unique_colors){

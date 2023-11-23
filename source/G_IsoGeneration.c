@@ -19,17 +19,16 @@ inline void _setWhole(u16* tiles, int tile, u8 color_top, BlockFaces face_top, u
 	tiles[tile] = BIT(15) | ((face_bottom<<3|color_bottom)<<T_BOTTOM) | ((face_middle<<3|color_middle)<<T_MIDDLE)| ((face_top<<3|color_top)<<T_TOP) ;
 }
 
-
+extern int SCALE;
 void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
 	int i,j,k;
-	u8 scale = 4;
 
-	for(k = 0; k < world_dim_z * scale; k++){
-		for(j = 0; j < world_dim_y * scale; j++){
-			for(i = 0; i < world_dim_x * scale; i++){
+	for(k = 0; k < world_dim_z * SCALE; k++){
+		for(j = 0; j < world_dim_y * SCALE; j++){
+			for(i = 0; i < world_dim_x * SCALE; i++){
 
 				//if air, skip
-				u8 block_type = world[coords_3d(i/scale,j/scale,k/scale,world_dim_x,world_dim_y)];
+				u8 block_type = world[coords_3d(i/SCALE,j/SCALE,k/SCALE,world_dim_x,world_dim_y)];
 				if(! block_type) continue;
 
 				//get topleft tile
@@ -72,8 +71,8 @@ void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8
 		}
 	}
 }
-
 s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz){
+extern int TILES_ORIGIN;
 	int tile = TILES_ORIGIN;
 
 	//get the "floor coordinates" equivalent
@@ -100,5 +99,5 @@ s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz){
  *
  */
 u16 ISO_convertTileToWorld(u16 tile){
-
+	return 0;
 }

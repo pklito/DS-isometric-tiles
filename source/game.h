@@ -10,3 +10,5 @@
 void Game_InitScreen();
 
 void Game_Refresh();
+
+void Game_MoveScreen(int x, int y);

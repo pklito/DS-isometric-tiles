@@ -34,6 +34,9 @@ s8 WORLD_MAP[] = {
 		0,0,0,0,0,0,0,0
 };
 
+int SCALE = 1;
+int TILES_ORIGIN = 15;
+
 void Game_InitScreen()
 {
 	ISO_RenderTiles(WORLD_MAP);
@@ -41,4 +44,8 @@ void Game_InitScreen()
 
 void Game_Refresh(){
 	ISO_RenderTiles(WORLD_MAP);
+}
+
+void Game_MoveScreen(int x, int y){
+	TILES_ORIGIN += 32*y + x;
 }
