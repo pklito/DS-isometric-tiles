@@ -34,7 +34,7 @@ inline int _p_w1_f2(u8 wall_color, u8 wall_type, u8 other_floor_color){
 		return 4 + (wall_color==1) + 2 *(other_floor_color==3);
 }
 inline int _p_w1_w2(u8 wall_color,u8 wall_type, u8 other_wall_type){	//wall: row 5, other_wall: row 6
-	return 4 * (wall_type==2) + ((wall_type==1)+1)*(2-wall_color) + ((wall_type==2)+1)*(other_wall_type==2);
+	return (wall_type==2 ? 4 + (2-wall_color) + (other_wall_type==2) : (wall_color-1) + 2*(other_wall_type==2));
 }
 int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	u8 bot_color = bottom & 0b00111;
