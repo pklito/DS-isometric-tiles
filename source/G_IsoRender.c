@@ -33,8 +33,8 @@ inline int _p_w1_f2(u8 wall_color, u8 wall_type, u8 other_floor_color){
 	else
 		return 4 + (wall_color==1) + 2 *(other_floor_color==3);
 }
-inline int _p_w1_w2(u8 wall_color,u8 wall_type, u8 other_wall_type){
-	return 4 * (wall_type==2) + ((wall_type==1)+1)*(wall_color) + ((wall_type==2)+1)*(other_wall_type==2);
+inline int _p_w1_w2(u8 wall_color,u8 wall_type, u8 other_wall_type){	//wall: row 5, other_wall: row 6
+	return 4 * (wall_type==2) + ((wall_type==1)+1)*(2-wall_color) + ((wall_type==2)+1)*(other_wall_type==2);
 }
 int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	u8 bot_color = bottom & 0b00111;
@@ -96,6 +96,8 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 		//Both wall colors (extra bit for the side of wallB)
 	case T_AAB_WWX_W1W1W2:	//556
 		return _p_w1_w2(mid_color,mid_face,bot_face);
+	case T_ABC_W1F2W2:
+		return _p_w1_w2(bot_color,bot_face,top_face);
 		//(edge case)
 	case T_AAB_WWX_W1BW1BW1:
 	case T_AAB_WWX_W1W1W1B:
@@ -289,6 +291,12 @@ void ISO_RenderTiles(s8* world){
 				tile_index = T_ABC_F1W1F2;
 				palette = _paletteFinder(T_ABC_F1W1F2, bottom,middle,top);
 			}
+			else if(!_isFloor(top) && _isFloor(middle) && !_isFloor(bottom) && !_isSameBlock(top,bottom)){
+				tile_index = T_ABC_W1F2W2;
+				palette = _paletteFinder(T_ABC_W1F2W2,bottom,middle,top);
+				printf("palette: %d\n",palette);
+
+			}
 
 			else if(!_isFloor(top) && _isFloor(middle) && _isFloor(bottom)){	//WFF
 
@@ -440,14 +448,14 @@ u8 TILE_ABC_WFF_W1DF3[] = {
 };
 //TODO Catch W1F2W2 case, W2BF2W2?
 u8 TILE_ABC_W1F2W2[] = {
+		0x66,0x66,0x66,0x44,
+		0x66,0x66,0x44,0x44,
+		0x66,0x44,0x44,0x44,
+		0x44,0x44,0x44,0x44,
+		0x55,0x44,0x44,0x44,
+		0x55,0x55,0x44,0x44,
 		0x55,0x55,0x55,0x44,
-		0x55,0x55,0x22,0x44,
-		0x55,0x22,0x22,0x44,
-		0x22,0x22,0x22,0x44,
-		0x33,0x22,0x22,0x44,
-		0x33,0x33,0xaa,0x44,
-		0x33,0x33,0x44,0x44,
-		0x33,0x33,0x44,0x44
+		0x55,0x55,0x55,0x55
 };
 
 
@@ -656,7 +664,7 @@ u16 COLOR_PALETTE[] = {
 		COLOR_FS, 	COLOR_F2, COLOR_FS, COLOR_F1, COLOR_F2, COLOR_F1, COLOR_F2, COLOR_F1,
 		COLOR_F1,	COLOR_F1, COLOR_F2, COLOR_F2, COLOR_F2, COLOR_F1, COLOR_F2, COLOR_F1,
 		COLOR_W1A, 	COLOR_W1A,COLOR_W2A,COLOR_W2A,COLOR_W2B,COLOR_W1B,COLOR_W2B,COLOR_W1B,
-		COLOR_W2A,  COLOR_W2B,COLOR_W1A,COLOR_W1B,COLOR_W1A,COLOR_W2B,COLOR_W1A,COLOR_W2B,
+		COLOR_W2A,  COLOR_W2B,COLOR_W1A,COLOR_W1B,COLOR_W1A,COLOR_W2A,COLOR_W1B,COLOR_W2B,
 		COLOR_WATER,COLOR_F1, COLOR_F2, COLOR_FS, COLOR_W1A,COLOR_W1B,COLOR_W2A,COLOR_W2B
 };
 void ISO_InitTiles(){
@@ -697,6 +705,7 @@ void ISO_InitTiles(){
 	dmaCopy(TILE_ABC_F1F2F3, &BG_TILE_RAM(0)[T_ABC_F1F2F3<<4], 32);
 	dmaCopy(TILE_ABC_F1F2W2, &BG_TILE_RAM(0)[T_ABC_F1F2W2<<4], 32);
 	dmaCopy(TILE_ABC_F1W1F2, &BG_TILE_RAM(0)[T_ABC_F1W1F2<<4], 32);
+	dmaCopy(TILE_ABC_W1F2W2, &BG_TILE_RAM(0)[T_ABC_W1F2W2<<4], 32);
 	dmaCopy(TILE_ABC_WFF_W1F2F3, &BG_TILE_RAM(0)[T_ABC_WFF_W1F2F3<<4], 32);
 	dmaCopy(TILE_ABC_WFF_W2F2F3, &BG_TILE_RAM(0)[T_ABC_WFF_W2F2F3<<4], 32);
 	dmaCopy(TILE_ABC_WFF_W3F2F3, &BG_TILE_RAM(0)[T_ABC_WFF_W3F2F3<<4], 32);
