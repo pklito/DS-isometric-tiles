@@ -14,6 +14,9 @@
 #define WORLD_DIM_Y 8
 #define WORLD_DIM_Z 3
 
+/* Fixed point */
+#define SCALE_BITS 6
+
 /* VISUALS */
 //where zero zero starts on screen
 #define TILES_SHAPE BG_32x32

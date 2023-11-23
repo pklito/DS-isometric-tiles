@@ -19,16 +19,16 @@ inline void _setWhole(u16* tiles, int tile, u8 color_top, BlockFaces face_top, u
 	tiles[tile] = BIT(15) | ((face_bottom<<3|color_bottom)<<T_BOTTOM) | ((face_middle<<3|color_middle)<<T_MIDDLE)| ((face_top<<3|color_top)<<T_TOP) ;
 }
 
-extern int SCALE;
+extern u8 SCALE;
 void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
 	int i,j,k;
-
-	for(k = 0; k < world_dim_z * SCALE; k++){
-		for(j = 0; j < world_dim_y * SCALE; j++){
-			for(i = 0; i < world_dim_x * SCALE; i++){
+	int last_tile;
+	for(k = 0; k < (world_dim_z * SCALE)>>SCALE_BITS; k++){
+		for(j = 0; j < (world_dim_y * SCALE)>>SCALE_BITS; j++){
+			for(i = 0; i < (world_dim_x * SCALE)>>SCALE_BITS; i++){
 
 				//if air, skip
-				u8 block_type = world[coords_3d(i/SCALE,j/SCALE,k/SCALE,world_dim_x,world_dim_y)];
+				u8 block_type = world[coords_3d((i<<SCALE_BITS)/SCALE,(j<<SCALE_BITS)/SCALE,(k<<SCALE_BITS)/SCALE,world_dim_x,world_dim_y)];
 				if(! block_type) continue;
 
 				//get topleft tile

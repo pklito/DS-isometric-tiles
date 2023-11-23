@@ -34,7 +34,7 @@ s8 WORLD_MAP[] = {
 		0,0,0,0,0,0,0,0
 };
 
-int SCALE = 1;
+u8 SCALE = 64;
 int TILES_ORIGIN = 15;
 
 void Game_InitScreen()
@@ -51,6 +51,5 @@ void Game_MoveScreen(int x, int y){
 }
 
 void Game_SetScale(u8 scale){
-	if(scale <= 0) return;
 	SCALE = scale;
 }

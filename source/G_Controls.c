@@ -16,7 +16,7 @@ void Game_InitInput(){
 extern SCALE;
 void Game_HandleInput(){
 	scanKeys();
-	u16 keys = keysHeld();
+	u16 keys_held = keysHeld();
 	u16 keys_pressed = keysDown();
 	if(keys_pressed & KEY_RIGHT)
 		Game_MoveScreen(1,0);
@@ -26,9 +26,12 @@ void Game_HandleInput(){
 		Game_MoveScreen(0,1);
 	if(keys_pressed & KEY_UP)
 		Game_MoveScreen(0,-1);
-	if(keys_pressed & KEY_A)
-		Game_SetScale((SCALE)%3 + 1);
-	if(keys_pressed)
+	if(keys_held & KEY_A)
+		Game_SetScale(SCALE+2);
+
+	if(keys_held & KEY_B)
+		Game_SetScale(SCALE-2);
+	if(keys_pressed || (keys_held & (KEY_A | KEY_B)))
 		Game_Refresh();
 
 
