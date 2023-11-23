@@ -32,47 +32,60 @@ void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8
 				if(! block_type) continue;
 
 				//get topleft tile
-				int tile = ISO_convertWorldToTile(i,j,k);
+				s8 cull = 0;
+				int tile = ISO_convertWorldToTile(i,j,k, &cull);
+				if(cull != 0) printf("%d ",cull);
 
+				if(tile <= 0) printf("t: %d c: %d\n",tile,cull);
 				//this block goes off screen
 				if(tile == -1) continue;
 				//is this block half shifted down?
 				bool is_full = ((i+j)%2 == 0);
 				if(is_full){
-					//TODO edge case of wrapping, edge case of original tile wrapping
-					_setSlice(tiles, tile, T_MIDDLE, block_type, FACE_FLOOR);
-					_setSlice(tiles, tile++,T_BOTTOM, block_type,FACE_WALL_LEFT);
-					_setSlice(tiles, tile, T_MIDDLE, block_type, FACE_FLOOR);
-					_setSlice(tiles, tile, T_BOTTOM, block_type, FACE_WALL_RIGHT);
-
+					//cull tells me if the tile is drawn on the edge of the map, and only one side needs to be done
+					if(cull >= 0 && tile >= 0){
+						_setSlice(tiles, tile, T_MIDDLE, block_type, FACE_FLOOR);
+						_setSlice(tiles, tile,T_BOTTOM, block_type,FACE_WALL_LEFT);
+					}
+					tile ++;
+					if(cull <=0 && tile >= 0){
+						_setSlice(tiles, tile, T_MIDDLE, block_type, FACE_FLOOR);
+						_setSlice(tiles, tile, T_BOTTOM, block_type, FACE_WALL_RIGHT);
+					}
 					tile += TILES_SHAPE_WIDTH - 1;
-
-					_setSlice(tiles, tile,T_TOP, block_type, FACE_WALL_LEFT);
-					_setSlice(tiles, tile,T_MIDDLE, block_type, FACE_WALL_LEFT);
+					if(tile >= TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT) return;
+					if(cull >= 0 && tile >= 0){
+						_setSlice(tiles, tile,T_TOP, block_type, FACE_WALL_LEFT);
+						_setSlice(tiles, tile,T_MIDDLE, block_type, FACE_WALL_LEFT);
+					}
 					tile += 1;
-					_setSlice(tiles, tile,T_TOP, block_type, FACE_WALL_RIGHT);
-					_setSlice(tiles, tile,T_MIDDLE, block_type, FACE_WALL_RIGHT);
+					if(cull <= 0 && tile >= 0){
+						_setSlice(tiles, tile,T_TOP, block_type, FACE_WALL_RIGHT);
+						_setSlice(tiles, tile,T_MIDDLE, block_type, FACE_WALL_RIGHT);
+					}
 				}
 				else{
-					//TODO edge case of wrapping, edge case of original tile wrapping
-					_setSlice(tiles, tile++, T_BOTTOM, block_type, FACE_FLOOR); 	//++!
-					_setSlice(tiles, tile, T_BOTTOM, block_type, FACE_FLOOR);
 
-					tile += TILES_SHAPE_WIDTH - 1;
-					_setWhole(tiles,tile,block_type, FACE_FLOOR, block_type, FACE_WALL_LEFT, block_type, FACE_WALL_LEFT);
+					if(cull >=0 && tile >= 0) _setSlice(tiles, tile, T_BOTTOM, block_type, FACE_FLOOR);
 					tile += 1;
-					_setWhole(tiles,tile,block_type, FACE_FLOOR, block_type, FACE_WALL_RIGHT, block_type, FACE_WALL_RIGHT);
+					if(cull <= 0 && tile >= 0)_setSlice(tiles, tile, T_BOTTOM, block_type, FACE_FLOOR);
 					tile += TILES_SHAPE_WIDTH - 1;
-					_setSlice(tiles, tile, T_TOP, block_type, FACE_WALL_LEFT);
+					if(tile >= TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT) return;
+					if(cull >= 0 && tile >= 0)_setWhole(tiles,tile,block_type, FACE_FLOOR, block_type, FACE_WALL_LEFT, block_type, FACE_WALL_LEFT);
 					tile += 1;
-					_setSlice(tiles, tile, T_TOP, block_type, FACE_WALL_RIGHT);
+					if(cull <=0 && tile >= 0)_setWhole(tiles,tile,block_type, FACE_FLOOR, block_type, FACE_WALL_RIGHT, block_type, FACE_WALL_RIGHT);
+					tile += TILES_SHAPE_WIDTH - 1;
+					if(tile >= TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT) return;
+					if(cull >= 0 && tile >= 0)_setSlice(tiles, tile, T_TOP, block_type, FACE_WALL_LEFT);
+					tile += 1;
+					if(cull <= 0 && tile >= 0)_setSlice(tiles, tile, T_TOP, block_type, FACE_WALL_RIGHT);
 				}
 			}
 		}
 	}
 }
-s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz){
 extern int TILES_ORIGIN;
+s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz,s8* cull_lr){
 	int tile = TILES_ORIGIN;
 
 	//get the "floor coordinates" equivalent
@@ -84,9 +97,13 @@ extern int TILES_ORIGIN;
 	//calculate the tile offset from the origin
 	int offset_x = (y - x);
 	int offset_y = (x+y)/2 - pz;
-	if(tile%TILES_SHAPE_WIDTH + offset_x < 0 || tile%TILES_SHAPE_WIDTH + offset_x >= TILES_SHAPE_WIDTH) return -1;
+	if(loop_mod(tile,TILES_SHAPE_WIDTH) + offset_x < -1 || loop_mod(tile,TILES_SHAPE_WIDTH) + offset_x >= TILES_SHAPE_WIDTH) return -1;
+	int old_tile = tile;
 	tile += (offset_x + TILES_SHAPE_WIDTH * offset_y);
-	if(tile < 0 || tile/TILES_SHAPE_WIDTH >= TILES_SHAPE_HEIGHT) return -1;
+	if(tile < -2*TILES_SHAPE_WIDTH || tile/TILES_SHAPE_WIDTH >= TILES_SHAPE_HEIGHT + 2*TILES_SHAPE_WIDTH) return -1;
+	if(cull_lr){
+		*(cull_lr) = (s8)((loop_mod(old_tile,TILES_SHAPE_WIDTH) + offset_x >= TILES_SHAPE_WIDTH-1) - (loop_mod(old_tile,TILES_SHAPE_WIDTH) + offset_x < 0));
+	}
 	return tile;
 }
 

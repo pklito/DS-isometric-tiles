@@ -22,3 +22,5 @@ int rng();
 
 void rng_set_seed(int new_seed);
 
+inline int loop_mod(int x, int m);
+

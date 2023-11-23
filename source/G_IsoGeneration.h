@@ -64,7 +64,7 @@ void ISO_GenerateTilesInverse(u16* tiles);
  * Return tile number, in 32x32 world.
  *
  */
-s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz);
+s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz,s8* cull_lr);
 
 /*
  * Gives the bottom left solution.

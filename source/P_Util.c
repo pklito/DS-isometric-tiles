@@ -45,3 +45,8 @@ int rng(){
 void rng_set_seed(int new_seed){
 	seed = new_seed;
 }
+
+inline int loop_mod(int x, int m){
+	return (x%m + m)%m;
+}
+
