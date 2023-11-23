@@ -28,7 +28,7 @@ void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8
 			for(i = 0; i < (world_dim_x * SCALE)>>SCALE_BITS; i++){
 
 				//if air, skip
-				u8 block_type = world[coords_3d((i<<SCALE_BITS)/SCALE,(j<<SCALE_BITS)/SCALE,(k<<SCALE_BITS)/SCALE,world_dim_x,world_dim_y)];
+				u8 block_type = world[coords_3d((i<<SCALE_BITS)/SCALE, (j<<SCALE_BITS)/SCALE, (k<<SCALE_BITS)/SCALE,world_dim_x,world_dim_y)];
 				if(! block_type) continue;
 
 				//get topleft tile

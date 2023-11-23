@@ -101,6 +101,8 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 		//(edge case)
 	case T_AAB_WWX_W1BW1BW1:
 	case T_AAB_WWX_W1W1W1B:
+	case T_ABC_W2BF2W2:
+	case T_ABC_W2F2W2B:
 		return 8 - bot_color;
 	/* Three colors */
 
@@ -291,11 +293,19 @@ void ISO_RenderTiles(s8* world){
 				tile_index = T_ABC_F1W1F2;
 				palette = _paletteFinder(T_ABC_F1W1F2, bottom,middle,top);
 			}
-			else if(!_isFloor(top) && _isFloor(middle) && !_isFloor(bottom) && !_isSameBlock(top,bottom)){
+			else if(!_isFloor(top) && _isFloor(middle) && !_isFloor(bottom)){
+				if(!_isSameBlock(top,bottom)){
 				tile_index = T_ABC_W1F2W2;
 				palette = _paletteFinder(T_ABC_W1F2W2,bottom,middle,top);
-				printf("palette: %d\n",palette);
-
+				}
+				else if(_isLeftWall(top)){
+					tile_index = T_ABC_W2F2W2B;
+					palette = _paletteFinder(T_ABC_W2F2W2B,bottom,middle,top);
+				}
+				else{
+					tile_index = T_ABC_W2BF2W2;
+					palette = _paletteFinder(T_ABC_W2BF2W2,bottom,middle,top);
+				}
 			}
 
 			else if(!_isFloor(top) && _isFloor(middle) && _isFloor(bottom)){	//WFF
@@ -457,7 +467,26 @@ u8 TILE_ABC_W1F2W2[] = {
 		0x55,0x55,0x55,0x44,
 		0x55,0x55,0x55,0x55
 };
-
+u8 TILE_ABC_W2F2W2B[] = {
+		0x11,0x11,0x11,0x44,
+		0x11,0x11,0x44,0x44,
+		0x11,0x44,0x44,0x44,
+		0x44,0x44,0x44,0x44,
+		0x55,0x44,0x44,0x44,
+		0x55,0x55,0x44,0x44,
+		0x55,0x55,0x55,0x44,
+		0x55,0x55,0x55,0x55
+};
+u8 TILE_ABC_W2BF2W2[] = {
+		0x55,0x55,0x55,0x44,
+		0x55,0x55,0x44,0x44,
+		0x55,0x44,0x44,0x44,
+		0x44,0x44,0x44,0x44,
+		0x11,0x44,0x44,0x44,
+		0x11,0x11,0x44,0x44,
+		0x11,0x11,0x11,0x44,
+		0x11,0x11,0x11,0x11
+};
 
 /*Two are same*/
 u8 TILE_ABA_F1F2F1[] = {
@@ -706,6 +735,8 @@ void ISO_InitTiles(){
 	dmaCopy(TILE_ABC_F1F2W2, &BG_TILE_RAM(0)[T_ABC_F1F2W2<<4], 32);
 	dmaCopy(TILE_ABC_F1W1F2, &BG_TILE_RAM(0)[T_ABC_F1W1F2<<4], 32);
 	dmaCopy(TILE_ABC_W1F2W2, &BG_TILE_RAM(0)[T_ABC_W1F2W2<<4], 32);
+	dmaCopy(TILE_ABC_W2BF2W2, &BG_TILE_RAM(0)[T_ABC_W2BF2W2<<4], 32);
+	dmaCopy(TILE_ABC_W2F2W2B, &BG_TILE_RAM(0)[T_ABC_W2F2W2B<<4], 32);
 	dmaCopy(TILE_ABC_WFF_W1F2F3, &BG_TILE_RAM(0)[T_ABC_WFF_W1F2F3<<4], 32);
 	dmaCopy(TILE_ABC_WFF_W2F2F3, &BG_TILE_RAM(0)[T_ABC_WFF_W2F2F3<<4], 32);
 	dmaCopy(TILE_ABC_WFF_W3F2F3, &BG_TILE_RAM(0)[T_ABC_WFF_W3F2F3<<4], 32);
