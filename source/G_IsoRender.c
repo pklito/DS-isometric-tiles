@@ -117,7 +117,7 @@ int _paletteFinder(TileTypes tile_type, u8 bottom, u8 middle, u8 top){
 	return 10;
 }
 extern int TILES_ORIGIN;
-bool ISO_IsTileFlipped(int tile){
+inline bool ISO_IsTileFlipped(int tile){
 	return (tile%2) != ((TILES_ORIGIN*TILES_ORIGIN)%2);
 }
 u16 tiles[TILES_SHAPE_WIDTH * TILES_SHAPE_HEIGHT];

@@ -8,6 +8,7 @@
 #include <nds.h>
 #include "Constants.h"
 #include "P_Util.h"
+#include "G_IsoRender.h"	//ISO_IsTileFlipped
 
 typedef enum {
 	T_BOTTOM = 0,
@@ -76,6 +77,6 @@ s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz,s8* cull_lr);
  * returns the lowest tile affecting this one (the bottom triangle)
  *
  */
-u16 ISO_convertTileToWorld(u16 tile);
+u16 ISO_convertTileToWorld(u16 tile, s8 height);
 
 

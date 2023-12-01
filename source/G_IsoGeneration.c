@@ -117,6 +117,6 @@ s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz,s8* cull_lr){
  * returns the lowest tile affecting this one (the bottom triangle)
  *
  */
-u16 ISO_convertTileToWorld(u16 tile){
-	return 0;
+u16 ISO_convertTileToWorld(u16 tile,s8 height){
+
 }
