@@ -13,3 +13,5 @@
 void ISO_RenderTiles(s8* world);
 
 void ISO_InitTiles();
+
+bool ISO_isTileFlipped(int tile);
