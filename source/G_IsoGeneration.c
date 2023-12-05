@@ -86,6 +86,31 @@ void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8
 		}
 	}
 }
+
+void ISO_ReverseGenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
+	int i,j;
+	for(j = TILES_SHAPE_HEIGHT; j >= 0 ; j --){
+		for(i = 0; i < TILES_SHAPE_WIDTH - 1; i+=2){
+			u16 res = ISO_convertTileToWorld(coords(i,j, TILES_SHAPE_WIDTH),0);
+
+			u8 x = res & 0xff;
+			u8 y = res >> 8;
+			if(x < 0 || y < 0 || x > 3 + world_dim_x || y > 3 + world_dim_y)
+				continue;
+			bool top,mid,bot;
+			int count = 5;
+			int height = 0;
+			while(!top || !mid || !bot || --count >= 0){
+				int block = world[coords_3d(x,y,height,world_dim_x,world_dim_y)];
+				if(block){
+					_setSlice(tiles,coords(i,j, TILES_SHAPE_WIDTH),T_TOP,block,FACE_FLOOR);
+				}
+			}
+
+
+		}
+	}
+}
 extern int TILES_ORIGIN;
 s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz,s8* cull_lr){
 	int tile = TILES_ORIGIN;
@@ -118,5 +143,10 @@ s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz,s8* cull_lr){
  *
  */
 u16 ISO_convertTileToWorld(u16 tile,s8 height){
+	tile += !ISO_isTileFlipped(tile);
 
+	int t_y = (tile / TILES_SHAPE_WIDTH) - (TILES_ORIGIN / TILES_SHAPE_WIDTH);
+	int t_x = (tile % TILES_SHAPE_WIDTH) - (TILES_ORIGIN % TILES_SHAPE_WIDTH);
+
+	return ((t_y + t_x)<<8) | (t_y - t_x + 1);
 }
