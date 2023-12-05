@@ -34,8 +34,8 @@ s8 WORLD_MAP[] = {
 		0,0,0,0,0,0,0,0
 };
 
-u8 SCALE = 128;
-int TILES_ORIGIN = 205;
+u8 SCALE = 64;
+int TILES_ORIGIN = 204;
 
 void Game_InitScreen()
 {
