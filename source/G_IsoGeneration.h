@@ -18,7 +18,7 @@ typedef enum {
 
 #define SLICE_MASK 0b11111
 
-typedef enum {
+typedef enum TileType {
 	/*SAME COLOR*/
 	T_FULL,
 	/*2 COLORS*/
@@ -56,7 +56,9 @@ typedef enum {
 	T_ABC_WFF_W3F2F3,
 	T_ABC_WFF_W1F2F3,
 	T_ABC_WFF_W1DF3,
-	T_ABC_WFF_W1DF1
+	T_ABC_WFF_W1DF1,
+
+	T_ERROR
 
 
 } TileTypes;
@@ -79,4 +81,12 @@ s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz,s8* cull_lr);
  */
 u16 ISO_convertTileToWorld(u16 tile, s8 height);
 
+typedef struct{
+	s8 x;
+	s8 y;
+	s8 z;
+	u8 type;
+} Block;
+
+void SetTileInWorld(u16* tiles, int x, int y, int z,u8 block_type);
 

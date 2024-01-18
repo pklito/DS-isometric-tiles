@@ -35,53 +35,7 @@ void ISO_GenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_dim_y, u8
 				//if air, skip
 				u8 block_type = world[coords_3d(wx, wy, wz,world_dim_x,world_dim_y)];
 				if(! block_type) continue;
-
-				//get topleft tile
-				s8 cull = 0;
-				int tile = ISO_convertWorldToTile(i,j,k, &cull);
-				//this block goes off screen
-				if(tile == -1) continue;
-				//is this block half shifted down?
-				bool is_full = ((i+j)%2 == 0);
-				if(is_full){
-					//cull tells me if the tile is drawn on the edge of the map, and only one side needs to be done
-					if(cull >= 0 && tile >= 0){
-						_setSlice(tiles, tile, T_MIDDLE, block_type, FACE_FLOOR);
-						_setSlice(tiles, tile,T_BOTTOM, block_type,FACE_WALL_LEFT);
-					}
-					tile ++;
-					if(cull <=0 && tile >= 0){
-						_setSlice(tiles, tile, T_MIDDLE, block_type, FACE_FLOOR);
-						_setSlice(tiles, tile, T_BOTTOM, block_type, FACE_WALL_RIGHT);
-					}
-					tile += TILES_SHAPE_WIDTH - 1;
-					if(tile >= TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT) return;
-					if(cull >= 0 && tile >= 0){
-						_setSlice(tiles, tile,T_TOP, block_type, FACE_WALL_LEFT);
-						_setSlice(tiles, tile,T_MIDDLE, block_type, FACE_WALL_LEFT);
-					}
-					tile += 1;
-					if(cull <= 0 && tile >= 0){
-						_setSlice(tiles, tile,T_TOP, block_type, FACE_WALL_RIGHT);
-						_setSlice(tiles, tile,T_MIDDLE, block_type, FACE_WALL_RIGHT);
-					}
-				}
-				else{
-
-					if(cull >=0 && tile >= 0) _setSlice(tiles, tile, T_BOTTOM, block_type, FACE_FLOOR);
-					tile += 1;
-					if(cull <= 0 && tile >= 0)_setSlice(tiles, tile, T_BOTTOM, block_type, FACE_FLOOR);
-					tile += TILES_SHAPE_WIDTH - 1;
-					if(tile >= TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT) return;
-					if(cull >= 0 && tile >= 0)_setWhole(tiles,tile,block_type, FACE_FLOOR, block_type, FACE_WALL_LEFT, block_type, FACE_WALL_LEFT);
-					tile += 1;
-					if(cull <=0 && tile >= 0)_setWhole(tiles,tile,block_type, FACE_FLOOR, block_type, FACE_WALL_RIGHT, block_type, FACE_WALL_RIGHT);
-					tile += TILES_SHAPE_WIDTH - 1;
-					if(tile >= TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT) return;
-					if(cull >= 0 && tile >= 0)_setSlice(tiles, tile, T_TOP, block_type, FACE_WALL_LEFT);
-					tile += 1;
-					if(cull <= 0 && tile >= 0)_setSlice(tiles, tile, T_TOP, block_type, FACE_WALL_RIGHT);
-				}
+				SetTileInWorld(tiles, i,j,k,block_type);
 			}
 		}
 	}
@@ -111,6 +65,103 @@ void ISO_ReverseGenerateTiles(u16* tiles, s8* world, u8 world_dim_x, u8 world_di
 		}
 	}
 }
+
+/* Preprocess render */
+Block* Preprocess_World(s8* world, u8 world_dim_x, u8 world_dim_y, u8 world_dim_z){
+
+	Block* block_list = malloc(50*sizeof(s8));
+
+	block_list[0].type = 1;
+	int i,j,k;
+	int block_index = 1;
+	for(k = world_dim_z - 1; k >= 0; k--){
+		for(j = world_dim_y - 1; j >= 0; j--){
+			for(i = world_dim_x - 1 ; i >= 0; i--){
+				//increase memory if needed
+				if(block_index >= 32 * block_list[0].type){
+					printf("max memory! %d %d\n", block_index, 32 * block_list[0].type);
+					block_list[0].type *= 2;
+					block_list = realloc(block_list, 32 * block_list[0].type);
+				}
+
+				s8 block = world[coords_3d(i,j,k,world_dim_x,world_dim_y)];
+				if(block){
+					block_list[block_index++] = (Block) {i,j,k,block};
+				}
+
+			}
+		}
+	}
+	return block_list;
+}
+
+void ISO_GenerateTilesFromList(u16* tiles, Block* blocks_list){
+	int index = sizeof(blocks_list)/sizeof(Block);
+	while(--index >= 0){
+		Block block = blocks_list[index];
+		if(block.type == 0){
+			continue;
+		}
+
+		SetTileInWorld(tiles,block.x,block.y,block.z,block.type);
+
+	}
+}
+
+
+/* * * HELPER FUNCTIONS * * */
+
+/*
+ * Set the slices in the tile based on the location of the block, and the need for culling
+ */
+void SetTileInWorld(u16* tiles, int x, int y, int z,u8 block_type){
+	s8 cull = 0;
+	int tile = ISO_convertWorldToTile(x,y,z, &cull);
+	//this block goes off screen
+	if(tile == -1) return;
+	//is this block half shifted down?
+	bool is_full = ((x+y)%2 == 0);
+	if(is_full){
+		//cull tells me if the tile is drawn on the edge of the map, and only one side needs to be done
+		if(cull >= 0 && tile >= 0){
+			_setSlice(tiles, tile, T_MIDDLE, block_type, FACE_FLOOR);
+			_setSlice(tiles, tile,T_BOTTOM, block_type,FACE_WALL_LEFT);
+		}
+		tile ++;
+		if(cull <=0 && tile >= 0){
+			_setSlice(tiles, tile, T_MIDDLE, block_type, FACE_FLOOR);
+			_setSlice(tiles, tile, T_BOTTOM, block_type, FACE_WALL_RIGHT);
+		}
+		tile += TILES_SHAPE_WIDTH - 1;
+		if(tile >= TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT) return;
+		if(cull >= 0 && tile >= 0){
+			_setSlice(tiles, tile,T_TOP, block_type, FACE_WALL_LEFT);
+			_setSlice(tiles, tile,T_MIDDLE, block_type, FACE_WALL_LEFT);
+		}
+		tile += 1;
+		if(cull <= 0 && tile >= 0){
+			_setSlice(tiles, tile,T_TOP, block_type, FACE_WALL_RIGHT);
+			_setSlice(tiles, tile,T_MIDDLE, block_type, FACE_WALL_RIGHT);
+		}
+	}
+	else{
+
+		if(cull >=0 && tile >= 0) _setSlice(tiles, tile, T_BOTTOM, block_type, FACE_FLOOR);
+		tile += 1;
+		if(cull <= 0 && tile >= 0)_setSlice(tiles, tile, T_BOTTOM, block_type, FACE_FLOOR);
+		tile += TILES_SHAPE_WIDTH - 1;
+		if(tile >= TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT) return;
+		if(cull >= 0 && tile >= 0)_setWhole(tiles,tile,block_type, FACE_FLOOR, block_type, FACE_WALL_LEFT, block_type, FACE_WALL_LEFT);
+		tile += 1;
+		if(cull <=0 && tile >= 0)_setWhole(tiles,tile,block_type, FACE_FLOOR, block_type, FACE_WALL_RIGHT, block_type, FACE_WALL_RIGHT);
+		tile += TILES_SHAPE_WIDTH - 1;
+		if(tile >= TILES_SHAPE_WIDTH*TILES_SHAPE_HEIGHT) return;
+		if(cull >= 0 && tile >= 0)_setSlice(tiles, tile, T_TOP, block_type, FACE_WALL_LEFT);
+		tile += 1;
+		if(cull <= 0 && tile >= 0)_setSlice(tiles, tile, T_TOP, block_type, FACE_WALL_RIGHT);
+	}
+}
+
 extern int TILES_ORIGIN;
 s16 ISO_convertWorldToTile(u8 px, u8 py, u8 pz,s8* cull_lr){
 	int tile = TILES_ORIGIN;

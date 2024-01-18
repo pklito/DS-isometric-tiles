@@ -15,3 +15,5 @@ void ISO_RenderTiles(s8* world);
 void ISO_InitTiles();
 
 inline bool ISO_isTileFlipped(int tile);
+
+enum TileType _FindTileType(u8 bottom, u8 middle, u8 top);
