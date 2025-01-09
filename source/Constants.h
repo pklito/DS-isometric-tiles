@@ -12,7 +12,7 @@
 /* WORLD */
 #define WORLD_DIM_X 8
 #define WORLD_DIM_Y 8
-#define WORLD_DIM_Z 3
+#define WORLD_DIM_Z 4
 
 /* Fixed point */
 #define SCALE_BITS 6
