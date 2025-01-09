@@ -1,6 +1,7 @@
 # DS-isometric-tiles
-This project is a mock-up of typical isometric perspective games, using the tile mode on the nintendo DS, as part of course EE-310 at EPFL, Lausanne.
+This project is a mock-up of typical isometric perspective games, using the tile mode on the nintendo DS, as part of course on micro-embedded programming EE-310 at EPFL, Lausanne.  
 
+![](readme_files/demo.png)
 ## The project's main challenge
 Isometric view(technically Dimetric view in this case, but I will be calling it Isometric to fit the term used in gaming) looks something like this:
 
