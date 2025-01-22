@@ -1,5 +1,6 @@
 # DS-isometric-tiles
-This project is a mock-up of typical isometric perspective games, using the tile mode on the nintendo DS, as part of course on micro-embedded programming EE-310 at EPFL, Lausanne.  
+This project is a mock-up of typical isometric perspective games I worked on in my free time, using the tile mode on the nintendo DS, as part of course on micro-embedded programming EE-310 at EPFL, Lausanne.  
+This project tries to push to it's limit what can be done using a very small number of tilemap tiles on the DSi software, to create isometric landscape with memory efficiency.
 
 ![](readme_files/demo.png)
 ## The project's main challenge
